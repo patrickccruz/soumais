@@ -21,8 +21,7 @@ if (!isset($data['id']) || !is_numeric($data['id'])) {
 
 $notifId = (int)$data['id'];
 
-// Conexão com o banco de dados
-// $conn = new mysqli('localhost', 'root', '', 'sou_digital');
+// Verificando conexão com o banco de dados
 if ($conn->connect_error) {
     http_response_code(500);
     echo json_encode(['error' => 'Erro de conexão com o banco']);

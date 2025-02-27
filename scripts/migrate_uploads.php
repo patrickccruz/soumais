@@ -2,10 +2,11 @@
 require_once __DIR__ . '/../includes/upload_functions.php';
 
 // Conexão com o banco de dados
-$conn = new mysqli('localhost', 'root', '', 'sou_digital');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once __DIR__ . '/../db.php';  // Usar a conexão global do db.php
+// $conn = new mysqli('localhost', 'root', '', 'sou_digital');  // Removendo conexão direta
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// }
 
 function logMigration($message) {
     echo date('Y-m-d H:i:s') . " - " . $message . PHP_EOL;

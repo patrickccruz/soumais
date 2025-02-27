@@ -62,11 +62,11 @@
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Entre com sua conta</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">Entre com suas contas</h5>
                     <p class="text-center small">Digite seu usuário e senha para acessar</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate action="verificar-usuario.php" method="post">
+                  <form class="row g-3 needs-validation" novalidate action="processar-login.php" method="post">
                     <?php if ($error_message): ?>
                       <div class="alert alert-danger" role="alert">
                         <?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?>

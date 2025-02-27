@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $query->bind_param("ssss", $name, $email, $username, $password);
 
         if ($query->execute()) {
-            header('Location: verificar-usuario.php.php');
+            header('Location: verificar-usuario.php');
         } else {
             echo "Erro ao registrar: " . $query->error;
         }
@@ -85,7 +85,24 @@ $conn->close();
                     <p class="text-center small">Preencha todos os dados</p>
                   </div>
 
-                  <form class="row g-3 needs-validation" novalidate action="page-register.php" method="POST">
+                  <?php
+                  // Iniciar a sessão
+                  session_start();
+                  
+                  // Exibir mensagens de erro se existirem
+                  if (isset($_SESSION['error'])) {
+                      echo '<div class="alert alert-danger">' . $_SESSION['error'] . '</div>';
+                      unset($_SESSION['error']);
+                  }
+                  
+                  // Exibir mensagens de sucesso se existirem
+                  if (isset($_SESSION['success'])) {
+                      echo '<div class="alert alert-success">' . $_SESSION['success'] . '</div>';
+                      unset($_SESSION['success']);
+                  }
+                  ?>
+
+                  <form class="row g-3 needs-validation" novalidate action="processar-cadastro.php" method="POST">
                     <div class="col-12">
                       <label for="yourName" class="form-label">Seu Nome</label>
                       <input type="text" name="name" class="form-control" id="yourName" required>
@@ -124,7 +141,7 @@ $conn->close();
                       <button class="btn btn-primary w-100" type="submit">Criar conta</button>
                     </div>
                     <div class="col-12">
-                      <p class="small mb-0">Você já tem uma conta? <a href="verificar-usuario.php.php">Entre com a sua conta!</a></p>
+                      <p class="small mb-0">Você já tem uma conta? <a href="autenticacao.php">Entre com a sua conta!</a></p>
                     </div>
                   </form>
                 </div>

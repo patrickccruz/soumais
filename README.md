@@ -42,7 +42,7 @@ Siga estes passos para configurar o ambiente de desenvolvimento:
 1. **Clone o Repositório**
    ```bash
    git clone [URL_DO_REPOSITÓRIO]
-   cd Script
+   cd soudigital
    ```
 
 2. **Instale as Dependências PHP**
@@ -88,10 +88,35 @@ Siga estes passos para configurar o ambiente de desenvolvimento:
    ```
 
 5. **Configure o Servidor Web**
-   - Certifique-se de que o XAMPP está instalado e rodando
-   - O projeto deve estar na pasta `htdocs` do XAMPP
-   - Configure o Apache para apontar para o diretório do projeto
-   - Acesse o projeto através do navegador: `http://localhost/Script`
+   - Certifique-se de que o Apache está instalado e rodando
+   - Crie um VirtualHost para o projeto:
+   ```apache
+   <VirtualHost *:80>
+       ServerName soudigital.local
+       ServerAlias 192.168.2.194
+       
+       DocumentRoot /var/www/html/soudigital
+       
+       <Directory /var/www/html/soudigital>
+           Options Indexes FollowSymLinks
+           AllowOverride All
+           Require all granted
+       </Directory>
+       
+       ErrorLog ${APACHE_LOG_DIR}/soudigital_error.log
+       CustomLog ${APACHE_LOG_DIR}/soudigital_access.log combined
+   </VirtualHost>
+   ```
+   - **IMPORTANTE**: Sempre inclua o IP do servidor no `ServerAlias` para garantir acesso correto
+
+6. **Configure a Conexão com o Banco de Dados**
+   - Verifique se o arquivo `db.php` está na raiz do projeto
+   - Crie o diretório includes e um link simbólico para o arquivo db.php:
+   ```bash
+   mkdir -p /var/www/html/soudigital/includes
+   ln -s /var/www/html/soudigital/db.php /var/www/html/soudigital/includes/db.php
+   ```
+   - Isso garante que os arquivos no diretório `page/` consigam acessar a conexão do banco de dados
 
 ## Permissões de Diretórios
 
@@ -116,11 +141,11 @@ Adicione ou modifique o arquivo .htaccess na raiz do projeto:
 ```apache
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /Script/
+    RewriteBase /soudigital/
     
-    # Redirecionar para HTTPS
-    RewriteCond %{HTTPS} off
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # Redirecionar para HTTPS (se configurado)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
     # Proteger arquivos sensíveis
     RewriteRule ^(.env|composer.json|composer.lock)$ - [F,L]
@@ -136,30 +161,58 @@ Adicione ou modifique o arquivo .htaccess na raiz do projeto:
 
 ## Primeiro Acesso
 
-1. Acesse o sistema através do navegador
+1. Acesse o sistema através do navegador usando o IP ou nome do servidor
 2. Use as credenciais padrão:
    - Usuário: `admin`
    - Senha: `admin123`
 3. **IMPORTANTE**: Altere a senha padrão imediatamente após o primeiro acesso
 
-## Suporte
+## Solução de Problemas Comuns
 
-Em caso de problemas durante a instalação, verifique:
+### 1. Erros de Conexão ao Banco de Dados (HTTP ERROR 500)
 
-1. Se todas as extensões PHP necessárias estão habilitadas
+Se encontrar o erro "Access denied for user 'root'@'localhost'":
+
+1. Verifique se está usando o arquivo `db.php` centralizado:
+   ```php
+   require_once '../includes/db.php';  // Em páginas dentro do diretório page/
+   ```
+   
+2. Remova qualquer conexão direta como:
+   ```php
+   $conn = new mysqli('localhost', 'root', '', 'sou_digital');  // EVITE ISSO!
+   ```
+   
+3. Verifique se o link simbólico está correto:
    ```bash
-   php -m | grep -E "mysqli|pdo|zip|gd|mbstring|xml|fileinfo"
+   ls -la /var/www/html/soudigital/includes/db.php
+   ```
+   
+4. Execute o script para verificar conexões diretas:
+   ```bash
+   php check_db_connections.php
    ```
 
-2. Se as versões do PHP e Composer são compatíveis
-   ```bash
-   php -v
-   composer -V
+### 2. Páginas Sem Estilo CSS
+
+1. Verifique se a variável `$is_page` está definida no início do arquivo:
+   ```php
+   $is_page = true;
+   ```
+   
+2. Certifique-se de que o header.php está sendo incluído corretamente:
+   ```php
+   include_once '../includes/header.php';
    ```
 
-3. Se o servidor web tem as permissões corretas nos diretórios
-4. Se todas as variáveis de ambiente estão configuradas corretamente
-5. Se o banco de dados está acessível com as credenciais fornecidas
+### 3. Uploads de Arquivos Não Funcionam
+
+1. Verifique permissões dos diretórios:
+   ```bash
+   ls -la uploads/
+   ```
+   
+2. Certifique-se de que o PHP tem permissão para escrever nos diretórios
 
 ## Atualizando o Sistema
 
@@ -190,6 +243,53 @@ Para atualizar o sistema e suas dependências:
    mysql -u seu_usuario -p nome_do_banco < db/updates/update_latest.sql
    ```
 
+## Estrutura de Diretórios
+
+O sistema está organizado da seguinte forma:
+```
+/
+├── ajax/           # Endpoints para requisições AJAX
+├── assets/         # Recursos estáticos (CSS, JS, imagens)
+├── backups/        # Diretório para backups do sistema
+├── db/             # Scripts e arquivos relacionados ao banco de dados
+├── includes/       # Arquivos PHP reutilizáveis
+├── logs/           # Logs do sistema
+├── page/           # Páginas do sistema
+├── scripts/        # Scripts auxiliares
+├── uploads/        # Arquivos enviados pelos usuários
+└── vendor/         # Dependências do Composer
+```
+
+## Arquivos Principais
+
+- **db.php**: Arquivo central de conexão com o banco de dados
+- **index.php**: Página inicial do sistema
+- **header.php**, **sidebar.php**, **footer.php**: Componentes reutilizáveis da interface
+- **upload_functions.php**: Funções para manipulação de uploads
+- **check_db_connections.php**: Script para verificar conexões diretas ao banco
+
+## Melhores Práticas
+
+1. **Conexão com Banco de Dados**
+   - Sempre use o arquivo centralizado db.php
+   - Nunca crie conexões diretas em arquivos individuais
+   - Use prepared statements para todas as consultas SQL
+
+2. **Páginas e Interface**
+   - Defina sempre `$is_page = true;` no início das páginas no diretório page/
+   - Inclua o header, sidebar e footer corretamente
+   - Valide entradas de formulários antes de processá-las
+
+3. **Segurança**
+   - Sanitize todas as entradas de usuário
+   - Use htmlspecialchars para saídas de texto
+   - Valide uploads de arquivos rigorosamente
+
+4. **Manutenção**
+   - Faça backup regular do banco de dados
+   - Mantenha logs de erro para diagnóstico
+   - Documente alterações significativas
+
 ## Contribuindo
 
 1. Faça um Fork do projeto
@@ -198,42 +298,22 @@ Para atualizar o sistema e suas dependências:
 4. Push para a Branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
+## Documentação Adicional
+
+Para informações mais detalhadas sobre o funcionamento do sistema, consulte o arquivo [DOCUMENTATION.md](DOCUMENTATION.md).
+
 ## Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes. 
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## Configurando Atualização Automática do GitHub no Servidor
+## Contato e Suporte
 
-Vamos configurar seu servidor para receber automaticamente atualizações do GitHub quando você fizer um commit. Depois, podemos resolver o problema da tela branca na página de criação de usuário.
+Para suporte técnico ou dúvidas sobre o sistema, entre em contato:
 
-## Passo 1: Criar um Script de Atualização Automática
+- **Email**: suporte@soudigital.com
+- **Telefone**: (XX) XXXX-XXXX
+- **Site**: https://www.soudigital.com
 
-```
-<code_block_to_apply_changes_from>
-nano /var/www/html/soudigital/github-webhook.php
-```
+---
 
-Cole o seguinte código:
-
-```php
-<?php
-// Caminho para o repositório Git
-$repo_dir = '/var/www/html/soudigital';
-
-// Chave secreta (você deve definir uma chave única)
-$secret = "sua_chave_secreta_muito_segura";
-
-// Cabeçalho com a assinatura do GitHub
-$signature = $_SERVER['HTTP_X_HUB_SIGNATURE'] ?? '';
-
-// Obtenha o conteúdo do payload
-$payload = file_get_contents('php://input');
-
-// Log para debug
-file_put_contents('/var/log/webhook.log', date('Y-m-d H:i:s') . " - Webhook recebido\n", FILE_APPEND);
-
-// Verificar assinatura (segurança)
-if ($signature) {
-    $hash = 'sha1=' . hash_hmac('sha1', $payload, $secret);
-    if (
-</rewritten_file> 
+**Atualizado em Fevereiro de 2025** 

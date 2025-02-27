@@ -1,21 +1,27 @@
 <?php
 session_start();
+error_log("[index.php] Iniciando index.php. Dados da sessão: " . print_r($_SESSION, true));
+
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
+    error_log("[index.php] Usuário não logado. Redirecionando para autenticação.");
     header("Location: page/autenticacao.php");
     exit;
 }
 
+error_log("[index.php] Usuário logado com sucesso.");
+
 if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
+    error_log("[index.php] Dados do usuário: " . print_r($user, true));
 } else {
     $user = ['id' => 0, 'name' => 'Usuário', 'username' => 'username'];
+    error_log("[index.php] Usando dados de usuário padrão.");
 }
 
 // Conexão com o banco de dados
-$conn = new mysqli('localhost', 'root', '', 'sou_digital');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+error_log("[index.php] Incluindo arquivo db.php para conexão com o banco de dados");
+require_once 'db.php';  // Usar a conexão global do arquivo db.php
+error_log("[index.php] Conexão com o banco de dados estabelecida");
 
 // Buscar posts do blog
 $sql = "SELECT p.*, u.name as author_name, 
