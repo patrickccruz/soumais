@@ -1,0 +1,8 @@
+{
+    "name": "sou-digital/script",
+    "description": "Sistema Sou Digital",
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.29",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
