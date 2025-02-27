@@ -201,3 +201,39 @@ Para atualizar o sistema e suas dependências:
 ## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes. 
+
+## Configurando Atualização Automática do GitHub no Servidor
+
+Vamos configurar seu servidor para receber automaticamente atualizações do GitHub quando você fizer um commit. Depois, podemos resolver o problema da tela branca na página de criação de usuário.
+
+## Passo 1: Criar um Script de Atualização Automática
+
+```
+<code_block_to_apply_changes_from>
+nano /var/www/html/soudigital/github-webhook.php
+```
+
+Cole o seguinte código:
+
+```php
+<?php
+// Caminho para o repositório Git
+$repo_dir = '/var/www/html/soudigital';
+
+// Chave secreta (você deve definir uma chave única)
+$secret = "sua_chave_secreta_muito_segura";
+
+// Cabeçalho com a assinatura do GitHub
+$signature = $_SERVER['HTTP_X_HUB_SIGNATURE'] ?? '';
+
+// Obtenha o conteúdo do payload
+$payload = file_get_contents('php://input');
+
+// Log para debug
+file_put_contents('/var/log/webhook.log', date('Y-m-d H:i:s') . " - Webhook recebido\n", FILE_APPEND);
+
+// Verificar assinatura (segurança)
+if ($signature) {
+    $hash = 'sha1=' . hash_hmac('sha1', $payload, $secret);
+    if (
+</rewritten_file> 
