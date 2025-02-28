@@ -159,6 +159,60 @@ Adicione ou modifique o arquivo .htaccess na raiz do projeto:
 </IfModule>
 ```
 
+## Configuração do Ngrok
+
+O [Ngrok](https://ngrok.com/) é uma ferramenta que permite expor serviços web locais na internet de forma segura, sem precisar configurar portas, IPs, DNS ou firewall.
+
+### Instalação
+
+Instale o agente do Ngrok usando um gerenciador de pacotes:
+
+- **Mac**: `brew install ngrok`
+- **Linux**: `sudo apt install ngrok`  
+- **Windows**: `choco install ngrok`
+
+### Conectar à conta
+
+Conecte o agente à sua conta do Ngrok usando o token de autenticação:
+
+```bash
+ngrok config add-authtoken SEU_AUTH_TOKEN
+```
+
+Substitua `SEU_AUTH_TOKEN` pelo token disponível no [Dashboard do Ngrok](https://dashboard.ngrok.com/get-started/your-authtoken).
+
+### Iniciar um túnel temporário
+
+Para expor um serviço web local na porta 80:
+
+```bash
+ngrok http 80
+```
+
+O Ngrok vai gerar uma URL pública segura que encaminha o tráfego para `http://localhost:80`.
+
+### Iniciar um túnel permanente
+
+Para usar sempre a mesma URL ao reiniciar o túnel, use a flag `--url`: 
+
+```bash
+ngrok http 80 --url=seusubdominio.ngrok.io
+```
+
+Essa opção requer um [plano pago](https://ngrok.com/pricing) do Ngrok.
+
+### Adicionar segurança
+
+É possível adicionar segurança aos endpoints públicos do Ngrok sem modificar o serviço web local.
+
+Por exemplo, para exigir autenticação básica HTTP:
+
+```bash
+ngrok http -auth="usuario:senha" 80
+```
+
+Consulte a [documentação do Ngrok](https://ngrok.com/docs) para mais opções de segurança e configuração avançada.
+
 ## Primeiro Acesso
 
 1. Acesse o sistema através do navegador usando o IP ou nome do servidor
