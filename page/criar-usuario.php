@@ -155,6 +155,15 @@ if (file_exists('../includes/header.php')) {
     error_log("[criar-usuario.php] ERRO: Arquivo header.php não encontrado");
     echo "<div style='color:red; font-weight:bold; padding:20px;'>ERRO: Arquivo de cabeçalho não encontrado</div>";
 }
+
+// Incluir o sidebar
+if (file_exists('../includes/sidebar.php')) {
+    error_log("[criar-usuario.php] Incluindo sidebar.php");
+    include_once '../includes/sidebar.php';
+} else {
+    error_log("[criar-usuario.php] ERRO: Arquivo sidebar.php não encontrado");
+    echo "<div style='color:red; font-weight:bold; padding:20px;'>ERRO: Arquivo de sidebar não encontrado</div>";
+}
 ?>
 
 

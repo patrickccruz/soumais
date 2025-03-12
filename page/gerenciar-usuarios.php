@@ -2,6 +2,9 @@
 session_start();
 require_once '../db.php';
 
+// Definição para indicar que estamos em uma página dentro da pasta 'page'
+$is_page = true;
+
 // Verificação de autenticação
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: autenticacao.php');
@@ -15,17 +18,58 @@ if (!isset($_SESSION['user']['is_admin']) || $_SESSION['user']['is_admin'] !== t
 }
 
 // Buscar todos os usuários
-$query = "SELECT id, name, username, email, profile_image, created_at, is_admin, status FROM users ORDER BY created_at DESC";
-$result = $conn->query($query);
-$users = [];
-
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $users[] = $row;
+try {
+    // Verificar qual tabela está disponível
+    $users_table = 'users'; // Padrão
+    
+    $table_check = $conn->query("SHOW TABLES LIKE 'users'");
+    if ($table_check->num_rows === 0) {
+        // Se não existir, verificar 'usuarios'
+        $table_check = $conn->query("SHOW TABLES LIKE 'usuarios'");
+        if ($table_check->num_rows > 0) {
+            $users_table = 'usuarios';
+            error_log("gerenciar-usuarios.php: Usando tabela 'usuarios'");
+        } else {
+            error_log("gerenciar-usuarios.php: ATENÇÃO - Nenhuma tabela de usuários encontrada");
+        }
+    } else {
+        error_log("gerenciar-usuarios.php: Usando tabela 'users'");
     }
+    
+    // Verificar colunas disponíveis
+    $columns_result = $conn->query("DESCRIBE {$users_table}");
+    $available_columns = [];
+    
+    if ($columns_result) {
+        while ($column = $columns_result->fetch_assoc()) {
+            $available_columns[] = $column['Field'];
+        }
+        error_log("gerenciar-usuarios.php: Colunas disponíveis: " . implode(", ", $available_columns));
+    }
+    
+    $query = "SELECT id, name, username, email, profile_image, is_admin FROM {$users_table} ORDER BY id DESC";
+    $result = $conn->query($query);
+    
+    if (!$result) {
+        throw new Exception("Erro na consulta SQL: " . $conn->error);
+    }
+    
+    $users = [];
+    
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            // Adicionar status padrão para compatibilidade com o template
+            $row['status'] = 'active'; // Valor padrão para todos os usuários
+            $users[] = $row;
+        }
+    }
+} catch (Exception $e) {
+    error_log("Erro em gerenciar-usuarios.php: " . $e->getMessage());
+    $_SESSION['error'] = "Ocorreu um erro ao buscar os usuários: " . $e->getMessage();
 }
 
 include_once '../includes/header.php';
+include_once '../includes/sidebar.php';
 ?>
 
 <main id="main" class="main">
@@ -109,7 +153,7 @@ include_once '../includes/header.php';
                       <span class="badge bg-danger">Bloqueado</span>
                       <?php endif; ?>
                     </td>
-                    <td><?php echo date('d/m/Y H:i', strtotime($user['created_at'])); ?></td>
+                    <td>N/A</td>
                     <td>
                       <div class="d-flex">
                         <a href="editar-usuario.php?id=<?php echo $user['id']; ?>" class="btn btn-sm btn-info me-1">

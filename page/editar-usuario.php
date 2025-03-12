@@ -1,4 +1,9 @@
 <?php
+// Habilitar exibição de erros para diagnóstico
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 require_once '../db.php';
 
@@ -45,17 +50,55 @@ try {
         if ($id === false || empty($name) || empty($username) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Dados inválidos fornecidos");
         }
+        
+        // Verificar qual tabela está disponível
+        $users_table = 'users'; // Padrão
+        
+        $table_check = $conn->query("SHOW TABLES LIKE 'users'");
+        if ($table_check->num_rows === 0) {
+            // Se não existir, verificar 'usuarios'
+            $table_check = $conn->query("SHOW TABLES LIKE 'usuarios'");
+            if ($table_check->num_rows > 0) {
+                $users_table = 'usuarios';
+                error_log("editar-usuario.php: Usando tabela 'usuarios' para UPDATE");
+            } else {
+                error_log("editar-usuario.php: ATENÇÃO - Nenhuma tabela de usuários encontrada para UPDATE");
+                throw new Exception("Tabela de usuários não encontrada");
+            }
+        } else {
+            error_log("editar-usuario.php: Usando tabela 'users' para UPDATE");
+        }
+        
+        // Verificar colunas disponíveis
+        $columns_result = $conn->query("DESCRIBE {$users_table}");
+        $available_columns = [];
+        
+        if ($columns_result) {
+            while ($column = $columns_result->fetch_assoc()) {
+                $available_columns[] = $column['Field'];
+            }
+            error_log("editar-usuario.php: Colunas disponíveis para UPDATE: " . implode(", ", $available_columns));
+        }
 
         // Verificar se o username já existe (exceto para o usuário atual)
-        $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
+        $stmt = $conn->prepare("SELECT id FROM {$users_table} WHERE username = ? AND id != ?");
         $stmt->bind_param("si", $username, $id);
         $stmt->execute();
         if ($stmt->get_result()->num_rows > 0) {
             throw new Exception("Este nome de usuário já está em uso");
         }
+        $stmt->close();
+
+        // Obter o perfil do usuário atual para recuperar a imagem
+        $stmt = $conn->prepare("SELECT profile_image FROM {$users_table} WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $current_user = $result->fetch_assoc();
+        $profile_image = $current_user['profile_image'] ?? null;
+        $stmt->close();
 
         // Processar upload da imagem de perfil
-        $profile_image = $user['profile_image'] ?? null; // Mantém a imagem atual por padrão
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
             $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
             $file_type = $_FILES['profile_image']['type'];
@@ -90,30 +133,62 @@ try {
         }
 
         // Preparar a query base
-        $sql = "UPDATE users SET name=?, username=?, email=?, is_admin=?";
-        $types = "sssi";
-        $params = [$name, $username, $email, $is_admin];
-
-        // Adicionar senha se fornecida
-        if (!empty($password)) {
-            $sql .= ", password=?";
+        $set_parts = [];
+        $types = "";
+        $params = [];
+        
+        // Adicionar campos básicos apenas se existirem na tabela
+        if (in_array('name', $available_columns)) {
+            $set_parts[] = "name=?";
+            $types .= "s";
+            $params[] = $name;
+        }
+        
+        if (in_array('username', $available_columns)) {
+            $set_parts[] = "username=?";
+            $types .= "s";
+            $params[] = $username;
+        }
+        
+        if (in_array('email', $available_columns)) {
+            $set_parts[] = "email=?";
+            $types .= "s";
+            $params[] = $email;
+        }
+        
+        if (in_array('is_admin', $available_columns)) {
+            $set_parts[] = "is_admin=?";
+            $types .= "i";
+            $params[] = $is_admin;
+        }
+        
+        // Adicionar senha se fornecida e a coluna existir
+        if (!empty($password) && in_array('password', $available_columns)) {
+            $set_parts[] = "password=?";
             $types .= "s";
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $params[] = $hashed_password;
         }
-
-        // Adicionar imagem de perfil se houver alteração
-        if ($profile_image !== null) {
-            $sql .= ", profile_image=?";
+        
+        // Adicionar imagem de perfil se houver alteração e a coluna existir
+        if ($profile_image !== null && in_array('profile_image', $available_columns)) {
+            $set_parts[] = "profile_image=?";
             $types .= "s";
             $params[] = $profile_image;
         }
-
-        // Adicionar WHERE
-        $sql .= " WHERE id=?";
+        
+        // Se não houver campos para atualizar, lançar um erro
+        if (empty($set_parts)) {
+            throw new Exception("Não há campos disponíveis para atualizar");
+        }
+        
+        // Construir a consulta SQL
+        $sql = "UPDATE {$users_table} SET " . implode(', ', $set_parts) . " WHERE id=?";
         $types .= "i";
         $params[] = $id;
-
+        
+        error_log("editar-usuario.php: Executando UPDATE: " . $sql);
+        
         // Atualizar usuário
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
@@ -139,7 +214,58 @@ try {
             throw new Exception("ID de usuário inválido");
         }
 
-        $stmt = $conn->prepare("SELECT id, name, email, username, password, profile_image, is_admin FROM users WHERE id=?");
+        // Verificar qual tabela está disponível
+        $users_table = 'users'; // Padrão
+        
+        $table_check = $conn->query("SHOW TABLES LIKE 'users'");
+        if ($table_check->num_rows === 0) {
+            // Se não existir, verificar 'usuarios'
+            $table_check = $conn->query("SHOW TABLES LIKE 'usuarios'");
+            if ($table_check->num_rows > 0) {
+                $users_table = 'usuarios';
+                error_log("editar-usuario.php: Usando tabela 'usuarios'");
+            } else {
+                error_log("editar-usuario.php: ATENÇÃO - Nenhuma tabela de usuários encontrada");
+                throw new Exception("Tabela de usuários não encontrada");
+            }
+        } else {
+            error_log("editar-usuario.php: Usando tabela 'users'");
+        }
+        
+        // Verificar colunas disponíveis
+        $columns_result = $conn->query("DESCRIBE {$users_table}");
+        $available_columns = [];
+        
+        if ($columns_result) {
+            while ($column = $columns_result->fetch_assoc()) {
+                $available_columns[] = $column['Field'];
+            }
+            error_log("editar-usuario.php: Colunas disponíveis: " . implode(", ", $available_columns));
+        }
+
+        // Construir a consulta baseada nas colunas disponíveis
+        $select_columns = [];
+        
+        // Colunas que queremos selecionar
+        $desired_columns = ['id', 'name', 'email', 'username', 'password', 'profile_image', 'is_admin'];
+        
+        // Verificar quais colunas existem na tabela
+        foreach ($desired_columns as $col) {
+            if (in_array($col, $available_columns)) {
+                $select_columns[] = $col;
+            }
+        }
+        
+        if (empty($select_columns)) {
+            throw new Exception("Não foi possível encontrar as colunas necessárias na tabela de usuários");
+        }
+        
+        $columns_str = implode(', ', $select_columns);
+        $query = "SELECT {$columns_str} FROM {$users_table} WHERE id=?";
+        
+        error_log("editar-usuario.php: Executando query: " . $query);
+        
+        $stmt = $conn->prepare($query);
         if (!$stmt) {
             throw new Exception("Erro na preparação da consulta: " . $conn->error);
         }
@@ -155,6 +281,9 @@ try {
         if (!$user) {
             throw new Exception("Usuário não encontrado");
         }
+        
+        // Registrar o usuário encontrado para debug
+        error_log("editar-usuario.php: Usuário encontrado: " . print_r($user, true));
     }
 
 } catch (Exception $e) {
@@ -165,9 +294,10 @@ try {
     if (isset($stmt) && $stmt instanceof mysqli_stmt) {
         $stmt->close();
     }
-    if (isset($conn)) {
-        $conn->close();
-    }
+    // NÃO fechar a conexão aqui, pois ela ainda será usada nos includes
+    // if (isset($conn)) {
+    //     $conn->close();
+    // }
 }
 
 // Função auxiliar para sanitização de saída
@@ -219,7 +349,7 @@ include_once '../includes/sidebar.php';
                                         <i class="bi bi-person"></i> Nome Completo
                                     </label>
                                     <input type="text" class="form-control" id="name" name="name" 
-                                           value="<?php echo h($user['name']); ?>" required
+                                           value="<?php echo h($user['name'] ?? ''); ?>" required
                                            pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]{2,}" 
                                            title="Nome deve conter apenas letras e espaços">
                                     <div class="invalid-feedback">
@@ -232,7 +362,7 @@ include_once '../includes/sidebar.php';
                                         <i class="bi bi-person-badge"></i> Nome de Usuário
                                     </label>
                                     <input type="text" class="form-control" id="username" name="username" 
-                                           value="<?php echo h($user['username']); ?>" required
+                                           value="<?php echo h($user['username'] ?? ''); ?>" required
                                            pattern="[a-zA-Z0-9_]{3,}" 
                                            title="Nome de usuário deve conter apenas letras, números e underscore">
                                     <div class="invalid-feedback">
@@ -245,7 +375,7 @@ include_once '../includes/sidebar.php';
                                         <i class="bi bi-envelope"></i> Email
                                     </label>
                                     <input type="email" class="form-control" id="email" name="email" 
-                                           value="<?php echo h($user['email']); ?>" required>
+                                           value="<?php echo h($user['email'] ?? ''); ?>" required>
                                     <div class="invalid-feedback">
                                         <i class="bi bi-exclamation-circle"></i> Por favor, insira um email válido.
                                     </div>
@@ -290,12 +420,12 @@ include_once '../includes/sidebar.php';
                                     </div>
                                 </div>
 
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="is_admin" name="is_admin" 
-                                               <?php echo ($user['is_admin'] ? 'checked' : ''); ?>>
+                                               value="1" <?php echo (isset($user['is_admin']) && $user['is_admin']) ? 'checked' : ''; ?>>
                                         <label class="form-check-label" for="is_admin">
-                                            <i class="bi bi-shield-lock"></i> Acesso de Administrador
+                                            <i class="bi bi-shield-lock"></i> Administrador
                                         </label>
                                     </div>
                                 </div>
@@ -472,6 +602,13 @@ include_once '../includes/sidebar.php';
         });
     })();
 </script>
+
+<?php
+// Fechar a conexão com o banco de dados após renderizar toda a página
+if (isset($conn)) {
+    $conn->close();
+}
+?>
 
 </body>
 </html>

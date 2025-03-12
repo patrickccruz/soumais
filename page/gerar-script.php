@@ -1,4 +1,11 @@
 <?php
+// Tentar aumentar os limites de upload em tempo de execução
+ini_set('upload_max_filesize', '10M');
+ini_set('post_max_size', '12M');
+ini_set('memory_limit', '128M');
+ini_set('max_execution_time', '300');
+ini_set('max_input_time', '300');
+
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
     header("Location: autenticacao.php");
@@ -23,6 +30,18 @@ $success_message = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
+        // Criar diretório de log se não existir
+        $log_dir = dirname(__DIR__) . '/logs';
+        if (!is_dir($log_dir)) {
+            mkdir($log_dir, 0777, true);
+        }
+        $log_file = $log_dir . '/gerar_script_upload.log';
+        $timestamp = date('Y-m-d H:i:s');
+        
+        file_put_contents($log_file, "\n[$timestamp] ==== PROCESSANDO FORM GERAR-SCRIPT ====\n", FILE_APPEND);
+        file_put_contents($log_file, "[$timestamp] Configurações PHP: upload_max_filesize=" . ini_get('upload_max_filesize') . 
+                                     ", post_max_size=" . ini_get('post_max_size') . "\n", FILE_APPEND);
+        
         $dataChamado = $_POST['dataChamado'];
         $numeroChamado = $_POST['numeroChamado'];
         $tipoChamado = $_POST['tipoChamado'];
@@ -71,39 +90,154 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $report_id = $conn->insert_id;
+        file_put_contents($log_file, "[$timestamp] Report ID criado: $report_id\n", FILE_APPEND);
 
         // Processar upload do arquivo
         if (isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] == UPLOAD_ERR_OK) {
-            $allowed_types = ['application/pdf'];
+            file_put_contents($log_file, "[$timestamp] Arquivo recebido: " . $_FILES['arquivo']['name'] . "\n", FILE_APPEND);
+            file_put_contents($log_file, "[$timestamp] Tamanho: " . $_FILES['arquivo']['size'] . " bytes\n", FILE_APPEND);
+            file_put_contents($log_file, "[$timestamp] Tipo: " . $_FILES['arquivo']['type'] . "\n", FILE_APPEND);
+            
+            // Validar tipo de arquivo
+            $allowed_types = ['application/pdf', 'application/x-pdf', 'application/acrobat', 'application/vnd.pdf', 'text/pdf', 'text/x-pdf'];
             $finfo = new finfo(FILEINFO_MIME_TYPE);
             $mime_type = $finfo->file($_FILES['arquivo']['tmp_name']);
             
-            if (!is_allowed_file_type($mime_type, $allowed_types)) {
-                throw new Exception("Tipo de arquivo não permitido. Use apenas PDF.");
-            }
-
-            // Gerar nome único e mover arquivo
-            $new_filename = generate_unique_filename($_FILES['arquivo']['name'], 'rat_');
-            $upload_path = get_upload_path('reports', ['report_id' => $report_id]);
-            $full_path = $upload_path . '/' . $new_filename;
-
-            error_log("Tentando fazer upload para: " . $full_path);
+            file_put_contents($log_file, "[$timestamp] MIME detectado: " . $mime_type . "\n", FILE_APPEND);
             
-            if (move_uploaded_file_safe($_FILES['arquivo']['tmp_name'], $full_path)) {
-                error_log("Upload realizado com sucesso para: " . $full_path);
-                // Armazenar apenas o caminho relativo no banco
-                $arquivoPath = 'uploads/reports/' . $report_id . '/' . $new_filename;
-                
-                // Atualizar o registro com o caminho do arquivo
-                $stmt = $conn->prepare("UPDATE reports SET arquivo_path = ? WHERE id = ?");
-                $stmt->bind_param("si", $arquivoPath, $report_id);
-                
-                if (!$stmt->execute()) {
-                    throw new Exception("Erro ao atualizar caminho do arquivo: " . $stmt->error);
-                }
-            } else {
-                throw new Exception("Erro ao fazer upload do arquivo");
+            if (!in_array($mime_type, $allowed_types)) {
+                $msg = "Tipo de arquivo não permitido. Use apenas PDF.";
+                file_put_contents($log_file, "[$timestamp] ERRO: $msg\n", FILE_APPEND);
+                throw new Exception($msg);
             }
+
+            // Verificar tamanho do arquivo (definir limite manual de 10MB)
+            $max_size = 10 * 1024 * 1024; // 10MB em bytes
+            if ($_FILES['arquivo']['size'] > $max_size) {
+                $msg = "O arquivo é muito grande (" . round($_FILES['arquivo']['size'] / (1024 * 1024), 2) . "MB). O tamanho máximo é 10MB.";
+                file_put_contents($log_file, "[$timestamp] ERRO: $msg\n", FILE_APPEND);
+                throw new Exception($msg);
+            }
+
+            // Criar diretório de uploads se não existir
+            $base_upload_dir = dirname(__DIR__) . '/uploads/reports';
+            if (!is_dir($base_upload_dir)) {
+                mkdir($base_upload_dir, 0777, true);
+                file_put_contents($log_file, "[$timestamp] Diretório base de uploads criado: $base_upload_dir\n", FILE_APPEND);
+            }
+            
+            // Gerar nome único e mover arquivo
+            $new_filename = 'rat_' . $report_id . '_' . time() . '_' . preg_replace('/[^a-zA-Z0-9\._-]/', '_', $_FILES['arquivo']['name']);
+            file_put_contents($log_file, "[$timestamp] Nome de arquivo gerado: " . $new_filename . "\n", FILE_APPEND);
+            
+            try {
+                // Criar diretório específico para este relatório
+                $report_dir = $base_upload_dir . '/' . $report_id;
+                if (!is_dir($report_dir)) {
+                    if (!mkdir($report_dir, 0777, true)) {
+                        throw new Exception("Não foi possível criar o diretório do relatório");
+                    }
+                    file_put_contents($log_file, "[$timestamp] Diretório do relatório criado: $report_dir\n", FILE_APPEND);
+                }
+                
+                $destination = $report_dir . '/' . $new_filename;
+                file_put_contents($log_file, "[$timestamp] Destino final: $destination\n", FILE_APPEND);
+                
+                // Método melhorado para movimentação do arquivo
+                if (!file_exists($_FILES['arquivo']['tmp_name'])) {
+                    file_put_contents($log_file, "[$timestamp] ERRO: Arquivo temporário não existe\n", FILE_APPEND);
+                    throw new Exception("Arquivo temporário não existe");
+                }
+                
+                if (!is_readable($_FILES['arquivo']['tmp_name'])) {
+                    file_put_contents($log_file, "[$timestamp] ERRO: Arquivo temporário não pode ser lido\n", FILE_APPEND);
+                    throw new Exception("Arquivo temporário não pode ser lido");
+                }
+                
+                // Tentar mover o arquivo com múltiplas abordagens
+                $upload_success = false;
+                
+                // Primeira tentativa: move_uploaded_file (método recomendado e mais seguro)
+                if (move_uploaded_file($_FILES['arquivo']['tmp_name'], $destination)) {
+                    $upload_success = true;
+                    file_put_contents($log_file, "[$timestamp] Arquivo movido com sucesso (move_uploaded_file)\n", FILE_APPEND);
+                } else {
+                    file_put_contents($log_file, "[$timestamp] Falha ao mover o arquivo com move_uploaded_file\n", FILE_APPEND);
+                    
+                    // Segunda tentativa: copiar o arquivo
+                    if (copy($_FILES['arquivo']['tmp_name'], $destination)) {
+                        $upload_success = true;
+                        file_put_contents($log_file, "[$timestamp] Arquivo copiado com sucesso (copy)\n", FILE_APPEND);
+                    } else {
+                        file_put_contents($log_file, "[$timestamp] Falha ao copiar o arquivo\n", FILE_APPEND);
+                        
+                        // Terceira tentativa: usar file_put_contents
+                        $file_content = file_get_contents($_FILES['arquivo']['tmp_name']);
+                        if ($file_content !== false && file_put_contents($destination, $file_content)) {
+                            $upload_success = true;
+                            file_put_contents($log_file, "[$timestamp] Arquivo salvo com sucesso (file_put_contents)\n", FILE_APPEND);
+                        } else {
+                            file_put_contents($log_file, "[$timestamp] Falha ao salvar o arquivo com file_put_contents\n", FILE_APPEND);
+                        }
+                    }
+                }
+                
+                if ($upload_success) {
+                    // Definir permissões adequadas
+                    chmod($destination, 0644);
+                    
+                    // Caminho relativo para o banco de dados
+                    $arquivoPath = 'uploads/reports/' . $report_id . '/' . $new_filename;
+                    file_put_contents($log_file, "[$timestamp] Caminho para banco de dados: $arquivoPath\n", FILE_APPEND);
+                    
+                    // Atualizar o registro com o caminho do arquivo
+                    $stmt = $conn->prepare("UPDATE reports SET arquivo_path = ? WHERE id = ?");
+                    $stmt->bind_param("si", $arquivoPath, $report_id);
+                    
+                    if (!$stmt->execute()) {
+                        $db_error = "Erro ao atualizar caminho do arquivo: " . $stmt->error;
+                        file_put_contents($log_file, "[$timestamp] ERRO BD: $db_error\n", FILE_APPEND);
+                        throw new Exception($db_error);
+                    }
+                    
+                    file_put_contents($log_file, "[$timestamp] Banco de dados atualizado com sucesso\n", FILE_APPEND);
+                } else {
+                    throw new Exception("Não foi possível salvar o arquivo após várias tentativas");
+                }
+            } catch (Exception $e) {
+                file_put_contents($log_file, "[$timestamp] EXCEÇÃO: " . $e->getMessage() . "\n", FILE_APPEND);
+                throw $e;
+            }
+        } else if (isset($_FILES['arquivo']) && $_FILES['arquivo']['error'] != UPLOAD_ERR_NO_FILE) {
+            // Registrar erro específico se houver um problema com o upload
+            $upload_error = $_FILES['arquivo']['error'];
+            $error_desc = "Erro no upload do arquivo: ";
+            
+            switch ($upload_error) {
+                case UPLOAD_ERR_INI_SIZE:
+                    $error_desc .= "O arquivo excede o tamanho máximo permitido pelo PHP (" . ini_get('upload_max_filesize') . ")";
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $error_desc .= "O arquivo excede o tamanho máximo especificado no formulário";
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $error_desc .= "O arquivo foi parcialmente enviado";
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $error_desc .= "Diretório temporário não encontrado";
+                    break;
+                case UPLOAD_ERR_CANT_WRITE:
+                    $error_desc .= "Falha ao gravar arquivo no disco";
+                    break;
+                case UPLOAD_ERR_EXTENSION:
+                    $error_desc .= "Upload interrompido por uma extensão PHP";
+                    break;
+                default:
+                    $error_desc .= "Código de erro: " . $upload_error;
+            }
+            
+            file_put_contents($log_file, "[$timestamp] $error_desc\n", FILE_APPEND);
+            throw new Exception($error_desc);
         }
 
         $success_message = "Dados salvos com sucesso!";
@@ -194,6 +328,15 @@ include_once '../includes/header.php';
     .patrimonio-row.new-row {
         animation: slideDown 0.3s ease-out;
     }
+    
+    /* Estilo para o alerta de informações de upload */
+    .upload-info {
+        background-color: #e7f3fe;
+        border-left: 5px solid #2196F3;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+    }
 </style>
 
 <?php include_once '../includes/sidebar.php'; ?>
@@ -213,6 +356,22 @@ include_once '../includes/header.php';
                                 </ol>
                             </nav>
                         </div>
+
+                        <?php if (!empty($error_message)): ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                <?php echo htmlspecialchars($error_message); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($success_message)): ?>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="bi bi-check-circle me-1"></i>
+                                <?php echo htmlspecialchars($success_message); ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <?php endif; ?>
 
                         <form id="scriptForm" enctype="multipart/form-data" method="POST">
                             <!-- Seção: Informações Básicas do Chamado -->
@@ -370,10 +529,15 @@ include_once '../includes/header.php';
                                             required></textarea>
                                     <label for="informacoesAdicionais" class="required-field">Descrição detalhada do atendimento</label>
                                 </div>
-
-                                <div class="form-floating mb-3">
+                                
+                                <div class="mb-3">
+                                    <label for="arquivo" class="form-label">Anexar RAT (PDF)</label>
+                                    <div class="upload-info">
+                                        <strong>Dica:</strong> Você pode anexar arquivos PDF de até 10MB. Certifique-se que o arquivo esteja no formato PDF.
+                                    </div>
+                                    <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
                                     <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".pdf">
-                                    <label for="arquivo">Anexar RAT (PDF)</label>
+                                    <small class="text-muted">Se o upload falhar, tente usar arquivos menores ou use a opção "Upload Alternativo" no menu lateral.</small>
                                 </div>
                             </div>
 
@@ -440,6 +604,28 @@ include_once '../includes/header.php';
             }
         });
 
+        // Validar tamanho do arquivo
+        document.getElementById('arquivo').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                const fileSize = this.files[0].size;
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                
+                if (fileSize > maxSize) {
+                    mostrarErro('O arquivo selecionado excede o tamanho máximo de 10MB. Selecione um arquivo menor ou use a opção "Upload Alternativo" do menu.');
+                    this.value = '';
+                }
+                
+                // Verificar extensão
+                const fileName = this.files[0].name;
+                const fileExt = fileName.split('.').pop().toLowerCase();
+                
+                if (fileExt !== 'pdf') {
+                    mostrarErro('Apenas arquivos PDF são permitidos.');
+                    this.value = '';
+                }
+            }
+        });
+
         // Adicionar novo campo de patrimônio
         document.getElementById('patrimoniosContainer').addEventListener('click', function(e) {
             if (e.target.classList.contains('add-patrimonio') || e.target.parentElement.classList.contains('add-patrimonio')) {
@@ -492,11 +678,17 @@ include_once '../includes/header.php';
     }
 
     <?php if ($success_message): ?>
-    mostrarSucesso("<?php echo htmlspecialchars($success_message); ?>");
+    // Mostrar alerta de sucesso
+    setTimeout(function() {
+        mostrarSucesso("<?php echo htmlspecialchars($success_message); ?>");
+    }, 500);
     <?php endif; ?>
 
     <?php if ($error_message): ?>
-    mostrarErro("<?php echo htmlspecialchars($error_message); ?>");
+    // Mostrar alerta de erro
+    setTimeout(function() {
+        mostrarErro("<?php echo htmlspecialchars($error_message); ?>");
+    }, 500);
     <?php endif; ?>
 
     // Inicializa os tooltips do Bootstrap

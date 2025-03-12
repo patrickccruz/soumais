@@ -1,0 +1,25 @@
+
+[2025-03-12 01:37:03] ==== PROCESSANDO UPLOAD GRANDE ====
+[2025-03-12 01:37:03] upload_max_filesize: 20M
+[2025-03-12 01:37:03] post_max_size: 20M
+[2025-03-12 01:37:03] memory_limit: 128M
+[2025-03-12 01:37:03] ERRO: Array FILES está vazio
+
+[2025-03-12 01:37:17] ==== PROCESSANDO UPLOAD GRANDE ====
+[2025-03-12 01:37:17] upload_max_filesize: 20M
+[2025-03-12 01:37:17] post_max_size: 20M
+[2025-03-12 01:37:17] memory_limit: 128M
+[2025-03-12 01:37:17] Informações do upload: Array
+(
+    [name] => RAT 426552.pdf
+    [full_path] => RAT 426552.pdf
+    [type] => application/pdf
+    [tmp_name] => /tmp/phpqVFcJO
+    [error] => 0
+    [size] => 2225256
+)
+
+[2025-03-12 01:37:17] MIME detectado: application/pdf
+[2025-03-12 01:37:17] Tentando mover arquivo para: /var/www/html/soudigital/uploads/grandes/pdf_67d0e54dd8029_RAT_426552.pdf
+[2025-03-12 01:37:17] Upload bem-sucedido: /var/www/html/soudigital/uploads/grandes/pdf_67d0e54dd8029_RAT_426552.pdf
+[2025-03-12 01:37:17] Tamanho do arquivo: 2.12MB

@@ -136,7 +136,7 @@ include_once '../includes/header.php';
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                        <img src="<?php echo htmlspecialchars($user['profile_image'] ? '../uploads/users/' . $user['id'] . '/profile/' . basename($user['profile_image']) : '../assets/img/sem_foto.png'); ?>" alt="Profile" id="profileImagePreview">
+                        <img src="<?php echo htmlspecialchars($user['profile_image'] ? '../' . $user['profile_image'] : '../assets/img/sem_foto.png'); ?>" alt="Profile" id="profileImagePreview">
                         <h2><?php echo htmlspecialchars($user['name']); ?></h2>
                     </div>
                 </div>
@@ -184,6 +184,9 @@ include_once '../includes/header.php';
                                                 <button type="button" onclick="document.getElementById('profileImageInput').click();" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></button>
                                                 <button type="submit" id="submitImage" class="btn btn-success btn-sm d-none" title="Save profile image"><i class="bi bi-check"></i></button>
                                                 <a href="remover-foto-perfil.php" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                                            </div>
+                                            <div class="mt-2 small text-muted">
+                                                Formatos aceitos: JPG, PNG, GIF, WEBP. Tamanho máximo: 5MB
                                             </div>
                                         </div>
                                     </div>
@@ -278,6 +281,25 @@ include_once '../includes/header.php';
     // Script para gerenciar o upload de imagem
     document.getElementById('profileImageInput').addEventListener('change', function() {
         if (this.files && this.files[0]) {
+            const file = this.files[0];
+            const fileSize = file.size / 1024 / 1024; // tamanho em MB
+            const maxSize = 5; // máximo de 5MB
+            
+            // Verificar o tamanho do arquivo
+            if (fileSize > maxSize) {
+                alert('O arquivo é muito grande! O tamanho máximo permitido é ' + maxSize + 'MB.');
+                this.value = ''; // Limpar o campo de arquivo
+                return;
+            }
+            
+            // Verificar o tipo do arquivo
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Tipo de arquivo não permitido! Apenas imagens nos formatos JPG, PNG, GIF e WEBP são aceitas.');
+                this.value = ''; // Limpar o campo de arquivo
+                return;
+            }
+            
             // Mostra o botão de salvar quando uma imagem é selecionada
             document.getElementById('submitImage').classList.remove('d-none');
             
@@ -286,7 +308,7 @@ include_once '../includes/header.php';
             reader.onload = function(e) {
                 document.getElementById('profileImagePreview').src = e.target.result;
             }
-            reader.readAsDataURL(this.files[0]);
+            reader.readAsDataURL(file);
         }
     });
 
