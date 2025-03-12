@@ -722,12 +722,3 @@ document.getElementById('valor').addEventListener('change', function(e) {
   }
 });
 </script>
-
-<?php
-} catch (Exception $e) {
-    error_log("Erro na página solicitar-reembolso.php: " . $e->getMessage());
-    if (ini_get('display_errors')) {
-        echo '<div class="alert alert-danger">Ocorreu um erro ao processar a página. Por favor, tente novamente mais tarde.</div>';
-    }
-}
-?>

@@ -23,6 +23,26 @@ error_log("[index.php] Incluindo arquivo db.php para conexão com o banco de dad
 require_once 'db.php';  // Usar a conexão global do arquivo db.php
 error_log("[index.php] Conexão com o banco de dados estabelecida");
 
+// Verificar se a conexão foi estabelecida
+if (!isset($conn) || $conn->connect_error) {
+    error_log("[index.php] ERRO: Conexão com o banco não está disponível");
+    // Conexão alternativa como fallback
+    $servername = "localhost";
+    $username = "sou_digital";
+    $password = "SuaSenhaSegura123!";
+    $dbname = "sou_digital";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    
+    if ($conn->connect_error) {
+        error_log("[index.php] ERRO CRÍTICO: Falha na conexão alternativa: " . $conn->connect_error);
+        echo "<div class='alert alert-danger'>Erro ao conectar ao banco de dados. Por favor, tente novamente mais tarde.</div>";
+        // Não vamos fazer exit aqui para mostrar pelo menos a interface
+    } else {
+        $conn->set_charset("utf8mb4");
+        error_log("[index.php] Conexão alternativa estabelecida com sucesso");
+    }
+}
+
 // Buscar posts do blog
 $sql = "SELECT p.*, u.name as author_name, 
         (SELECT COUNT(*) FROM blog_reacoes WHERE post_id = p.id) as total_reactions,
@@ -32,14 +52,20 @@ $sql = "SELECT p.*, u.name as author_name,
         WHERE p.status = 'aprovado'
         ORDER BY p.data_criacao DESC";
 
-$result = $conn->query($sql);
-
-// Armazenar os posts em um array
-$posts = [];
-if ($result && $result->num_rows > 0) {
-    while ($post = $result->fetch_assoc()) {
-        $posts[] = $post;
+// Verificar se a conexão está ativa antes de executar a consulta
+if (isset($conn) && !$conn->connect_error) {
+    $result = $conn->query($sql);
+    
+    // Armazenar os posts em um array
+    $posts = [];
+    if ($result && $result->num_rows > 0) {
+        while ($post = $result->fetch_assoc()) {
+            $posts[] = $post;
+        }
     }
+} else {
+    $posts = [];
+    error_log("[index.php] AVISO: Não foi possível executar a consulta SQL porque a conexão não está ativa");
 }
 
 include_once 'includes/header.php';

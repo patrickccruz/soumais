@@ -10,7 +10,7 @@ $user = $_SESSION['user'];
 
 // Processar o formulário quando enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $conn = new mysqli('localhost', 'root', '', 'sou_digital');
+    require_once '../includes/db.php';
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }

@@ -1,0 +1,7 @@
+[12-Mar-2025 23:50:48 UTC] [2025-03-12 23:50:48] Iniciando execução da página solicitar-reembolso.php
+[12-Mar-2025 23:50:48 UTC] [2025-03-12 23:50:48] ERRO: Função process_file_upload não encontrada
+[12-Mar-2025 23:50:48 UTC] PHP Warning:  require_once(../includes/upload_functions.php): Failed to open stream: No such file or directory in /var/www/html/soudigital/page/solicitar-reembolso.php on line 42
+[12-Mar-2025 23:50:48 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../includes/upload_functions.php' (include_path='.:/usr/share/php') in /var/www/html/soudigital/page/solicitar-reembolso.php:42
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/soudigital/page/solicitar-reembolso.php on line 42

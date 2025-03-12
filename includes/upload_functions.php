@@ -521,4 +521,3 @@ function get_upload_path($type, $params = []) {
     // Retornar o caminho relativo para armazenamento no banco de dados
     return $relative_path;
 } 
-} 

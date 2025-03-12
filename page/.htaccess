@@ -1,10 +1,22 @@
-# Aumentar limites de upload para essa pasta
-php_value upload_max_filesize 15M
-php_value post_max_size 16M
+# Habilitar exibição de erros para debug
+php_flag display_errors on
+php_value error_reporting E_ALL
+
+# Adicionar cabeçalhos de segurança
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Permitir uploads maiores
+php_value upload_max_filesize 20M
+php_value post_max_size 22M
 php_value memory_limit 128M
 php_value max_execution_time 300
 php_value max_input_time 300
-php_value max_file_uploads 20
+
+# Definir charset padrão
+AddDefaultCharset UTF-8
 
 # Permitir uploads
 <Files ~ "\.php$">
