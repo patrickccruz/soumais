@@ -1,0 +1,16 @@
+
+[2025-03-13 00:07:46] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 00:07:46] Arquivo recebido: Captura de tela 2024-11-24 231225.png
+[2025-03-13 00:07:46] Tamanho: 226154 bytes
+[2025-03-13 00:07:46] Tipo informado: image/png
+[2025-03-13 00:07:46] Validando tipo de arquivo: image/png
+[2025-03-13 00:07:46] Tipos permitidos: image/jpeg, image/png, image/jpg, image/webp, image/gif
+[2025-03-13 00:07:46] Tipo de arquivo válido
+[2025-03-13 00:07:46] Validando tamanho do arquivo: 220.85 KB
+[2025-03-13 00:07:46] Tamanho máximo permitido: 5 MB
+[2025-03-13 00:07:46] Tamanho do arquivo válido
+[2025-03-13 00:07:46] Diretório de destino criado: /var/www/html/soudigital/uploads/blog/1
+[2025-03-13 00:07:46] Nome de arquivo gerado: cover_67d221d2e9954_7621.png
+[2025-03-13 00:07:46] Caminho completo: /var/www/html/soudigital/uploads/blog/1/cover_67d221d2e9954_7621.png
+[2025-03-13 00:07:46] Upload bem-sucedido para: /var/www/html/soudigital/uploads/blog/1/cover_67d221d2e9954_7621.png
+[2025-03-13 00:07:46] === FIM DO PROCESSAMENTO (SUCESSO) ===

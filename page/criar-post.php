@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = isset($user['is_admin']) && $user['is_admin'] === true ? 'aprovado' : 'pendente';
     $data_aprovacao = $status === 'aprovado' ? date('Y-m-d H:i:s') : null;
     
-    $stmt = $conn->prepare("INSERT INTO blog_posts (user_id, titulo, conteudo, status, data_aprovacao, data_criacao) VALUES (?, ?, ?, ?, ?, NOW())");
+    $stmt = $conn->prepare("INSERT INTO blog_posts (user_id, titulo, conteudo, status, data_aprovacao, data_criacao, imagem_capa) VALUES (?, ?, ?, ?, ?, NOW(), '')");
     $stmt->bind_param("issss", $user['id'], $titulo, $conteudo, $status, $data_aprovacao);
     
     if ($stmt->execute()) {
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($result['success']) {
                 // Atualizar o caminho da imagem no banco
                 $imagem_path = $result['path'];
-                $stmt = $conn->prepare("UPDATE blog_posts SET imagem_path = ? WHERE id = ?");
+                $stmt = $conn->prepare("UPDATE blog_posts SET imagem_capa = ? WHERE id = ?");
                 $stmt->bind_param("si", $imagem_path, $post_id);
                 
                 if (!$stmt->execute()) {
@@ -150,6 +150,10 @@ include_once '../includes/sidebar.php';
     }
 </style>
 
+<!-- Bibliotecas do Quill Editor -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
 <main id="main" class="main">
     <section class="section">
         <div class="row">
@@ -193,7 +197,7 @@ include_once '../includes/sidebar.php';
 
                             <div class="mb-3">
                                 <label for="imagem_capa" class="form-label">Imagem de Capa</label>
-                                <input type="file" class="form-control" id="imagem_capa" name="imagem_capa" accept="image/*" required onchange="previewImage(this)">
+                                <input type="file" class="form-control" id="imagem_capa" name="imagem_capa" accept="image/*" onchange="previewImage(this)">
                                 <img id="preview" class="preview-image">
                             </div>
 
@@ -262,66 +266,69 @@ include_once '../includes/sidebar.php';
         }
     }
 
-    // Inicialização do Quill
-    var quill = new Quill('#editor', {
-        theme: 'snow',
-        modules: {
-            toolbar: [
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                [{ 'color': [] }, { 'background': [] }],
-                [{ 'align': [] }],
-                ['blockquote', 'code-block'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                [{ 'script': 'sub'}, { 'script': 'super' }],
-                [{ 'indent': '-1'}, { 'indent': '+1' }],
-                ['link', 'image', 'video'],
-                ['clean']
-            ]
-        },
-        placeholder: 'Escreva seu conteúdo aqui...'
-    });
-
-    // Quando o formulário for enviado, atualiza o campo hidden com o conteúdo HTML
-    document.querySelector('form').addEventListener('submit', function(e) {
-        var content = quill.root.innerHTML;
-        if (!content || content.trim() === '') {
-            e.preventDefault();
-            alert('Por favor, preencha o conteúdo do post.');
-            return;
-        }
-        document.getElementById('conteudo').value = content;
-    });
-
-    // Handler para upload de imagens
-    quill.getModule('toolbar').addHandler('image', function() {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-
-        input.onchange = async function() {
-            const file = input.files[0];
-            if (file) {
-                try {
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    const response = await fetch('../upload.php', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) throw new Error('Erro no upload');
-
-                    const data = await response.json();
-                    const range = quill.getSelection(true);
-                    quill.insertEmbed(range.index, 'image', data.location);
-                } catch (error) {
-                    alert('Erro ao fazer upload da imagem: ' + error.message);
-                }
+    // Inicializar Quill somente após a página ser carregada completamente
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicialização do Quill
+        var quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'align': [] }],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            },
+            placeholder: 'Escreva seu conteúdo aqui...'
+        });
+        
+        // Quando o formulário for enviado, atualiza o campo hidden com o conteúdo HTML
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var content = quill.root.innerHTML;
+            if (!content || content.trim() === '') {
+                e.preventDefault();
+                alert('Por favor, preencha o conteúdo do post.');
+                return;
             }
-        };
+            document.getElementById('conteudo').value = content;
+        });
+
+        // Handler para upload de imagens
+        quill.getModule('toolbar').addHandler('image', function() {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.click();
+
+            input.onchange = async function() {
+                const file = input.files[0];
+                if (file) {
+                    try {
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        const response = await fetch('../upload.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!response.ok) throw new Error('Erro no upload');
+
+                        const data = await response.json();
+                        const range = quill.getSelection(true);
+                        quill.insertEmbed(range.index, 'image', data.location);
+                    } catch (error) {
+                        alert('Erro ao fazer upload da imagem: ' + error.message);
+                    }
+                }
+            };
+        });
     });
 
     function adicionarLink() {
