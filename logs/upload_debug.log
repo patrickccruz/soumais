@@ -1,0 +1,113 @@
+[2025-03-13 12:58:45] get_upload_path chamado para tipo: reimbursement, params: {"reimbursement_id":5}
+[2025-03-13 12:58:45] Base path calculado: /var/www/html/soudigital/uploads
+[2025-03-13 12:58:45] Caminho final para upload: uploads/reimbursement/2025/03/reimb_5
+
+[2025-03-13 12:58:45] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 12:58:45] Arquivo origem: /tmp/phpZ2J6Sb
+[2025-03-13 12:58:45] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_5/reembolso_67d2d685e09bb_1393.png
+[2025-03-13 12:58:45] Arquivo movido com sucesso
+[2025-03-13 12:58:45] Permissões definidas: 0644
+[2025-03-13 12:58:45] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 12:58:45] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 12:58:45] Arquivo origem: /tmp/phpjglF15
+[2025-03-13 12:58:45] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_5/reembolso_67d2d685e0c0b_4199.png
+[2025-03-13 12:58:45] Arquivo movido com sucesso
+[2025-03-13 12:58:45] Permissões definidas: 0644
+[2025-03-13 12:58:45] === UPLOAD CONCLUÍDO ===
+[2025-03-13 13:04:22] get_upload_path chamado para tipo: reimbursement, params: {"reimbursement_id":5}
+[2025-03-13 13:04:22] Base path calculado: /var/www/html/soudigital/uploads
+[2025-03-13 13:04:22] Caminho final para upload: soudigital/uploads/reimbursement/2025/03/reimb_5
+
+[2025-03-13 13:04:22] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:04:22] Arquivo origem: /tmp/phpKFTlFC
+[2025-03-13 13:04:22] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_5/reembolso_67d2d7d63ece1_4194.png
+[2025-03-13 13:04:22] Arquivo movido com sucesso
+[2025-03-13 13:04:22] Permissões definidas: 0644
+[2025-03-13 13:04:22] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:04:22] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:04:22] Arquivo origem: /tmp/phpknvwki
+[2025-03-13 13:04:22] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_5/reembolso_67d2d7d63eedb_9287.png
+[2025-03-13 13:04:22] Arquivo movido com sucesso
+[2025-03-13 13:04:22] Permissões definidas: 0644
+[2025-03-13 13:04:22] === UPLOAD CONCLUÍDO ===
+[2025-03-13 13:14:01] get_upload_path chamado para tipo: reimbursement, params: {"reimbursement_id":7}
+[2025-03-13 13:14:01] Base path calculado: /var/www/html/soudigital/uploads
+[2025-03-13 13:14:01] Caminho final para upload: soudigital/uploads/reimbursement/2025/03/reimb_7
+
+[2025-03-13 13:14:01] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:14:01] Arquivo origem: /tmp/phpYrH3N5
+[2025-03-13 13:14:01] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_7/reembolso_67d2da1959c60_5903.png
+[2025-03-13 13:14:01] Arquivo movido com sucesso
+[2025-03-13 13:14:01] Permissões definidas: 0644
+[2025-03-13 13:14:01] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:14:01] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:14:01] Arquivo origem: /tmp/php8u1m2t
+[2025-03-13 13:14:01] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_7/reembolso_67d2da1959e44_3119.png
+[2025-03-13 13:14:01] Arquivo movido com sucesso
+[2025-03-13 13:14:01] Permissões definidas: 0644
+[2025-03-13 13:14:01] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:14:01] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:14:01] Arquivo origem: /tmp/phpzHNjVy
+[2025-03-13 13:14:01] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_7/reembolso_67d2da195a27f_8941.pdf
+[2025-03-13 13:14:01] Arquivo movido com sucesso
+[2025-03-13 13:14:01] Permissões definidas: 0644
+[2025-03-13 13:14:01] === UPLOAD CONCLUÍDO ===
+[2025-03-13 13:19:51] get_upload_path chamado para tipo: reimbursement, params: {"reimbursement_id":8}
+[2025-03-13 13:19:51] Base path calculado: /var/www/html/soudigital/uploads
+[2025-03-13 13:19:51] Caminho final para upload: soudigital/uploads/reimbursement/2025/03/reimb_8
+
+[2025-03-13 13:19:51] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:19:51] Arquivo origem: /tmp/phpW4sFiU
+[2025-03-13 13:19:51] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774e66e_1871.png
+[2025-03-13 13:19:51] Arquivo movido com sucesso
+[2025-03-13 13:19:51] Permissões definidas: 0644
+[2025-03-13 13:19:51] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:19:51] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:19:51] Arquivo origem: /tmp/phpTq4BJq
+[2025-03-13 13:19:51] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774e882_5367.png
+[2025-03-13 13:19:51] Arquivo movido com sucesso
+[2025-03-13 13:19:51] Permissões definidas: 0644
+[2025-03-13 13:19:51] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:19:51] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:19:51] Arquivo origem: /tmp/phpVqQyWE
+[2025-03-13 13:19:51] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774ea23_3240.png
+[2025-03-13 13:19:51] Arquivo movido com sucesso
+[2025-03-13 13:19:51] Permissões definidas: 0644
+[2025-03-13 13:19:51] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:19:51] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:19:51] Arquivo origem: /tmp/php1ibUpS
+[2025-03-13 13:19:51] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774ee58_9965.pdf
+[2025-03-13 13:19:51] Arquivo movido com sucesso
+[2025-03-13 13:19:51] Permissões definidas: 0644
+[2025-03-13 13:19:51] === UPLOAD CONCLUÍDO ===
+[2025-03-13 13:26:56] get_upload_path chamado para tipo: reimbursement, params: {"reimbursement_id":9}
+[2025-03-13 13:26:56] Base path calculado: /var/www/html/soudigital/uploads
+[2025-03-13 13:26:56] Caminho final para upload: soudigital/uploads/reimbursement/2025/03/reimb_9
+
+[2025-03-13 13:26:56] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:26:56] Arquivo origem: /tmp/php0zaNqt
+[2025-03-13 13:26:56] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_9/reembolso_67d2dd207f5e0_7082.png
+[2025-03-13 13:26:56] Arquivo movido com sucesso
+[2025-03-13 13:26:56] Permissões definidas: 0644
+[2025-03-13 13:26:56] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:26:56] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:26:56] Arquivo origem: /tmp/phpbiTWdZ
+[2025-03-13 13:26:56] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_9/reembolso_67d2dd207f7fa_6320.png
+[2025-03-13 13:26:56] Arquivo movido com sucesso
+[2025-03-13 13:26:56] Permissões definidas: 0644
+[2025-03-13 13:26:56] === UPLOAD CONCLUÍDO ===
+
+[2025-03-13 13:26:56] === INICIANDO UPLOAD SEGURO ===
+[2025-03-13 13:26:56] Arquivo origem: /tmp/php2Yj7pS
+[2025-03-13 13:26:56] Destino: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_9/reembolso_67d2dd207fdbc_4558.pdf
+[2025-03-13 13:26:56] Arquivo movido com sucesso
+[2025-03-13 13:26:56] Permissões definidas: 0644
+[2025-03-13 13:26:56] === UPLOAD CONCLUÍDO ===

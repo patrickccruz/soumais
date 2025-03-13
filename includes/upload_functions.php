@@ -4,34 +4,80 @@
  */
 
 /**
+ * Função segura para escrever nos logs sem gerar warnings
+ * 
+ * @param string $log_file Caminho do arquivo de log
+ * @param string $message Mensagem a ser escrita
+ * @return bool Se a operação foi realizada com sucesso
+ */
+function safe_log($log_file, $message) {
+    // Verifica se o diretório existe, se não, tenta criar
+    $log_dir = dirname($log_file);
+    if (!is_dir($log_dir)) {
+        // Tenta criar o diretório, ignora erro silenciosamente
+        @mkdir($log_dir, 0777, true);
+        
+        // Verifica se conseguiu criar
+        if (!is_dir($log_dir)) {
+            return false;
+        }
+    }
+    
+    // Verifica se o diretório é gravável
+    if (!is_writable($log_dir)) {
+        return false;
+    }
+    
+    // Tenta escrever no arquivo, sem gerar warnings
+    return @file_put_contents($log_file, $message, FILE_APPEND) !== false;
+}
+
+/**
+ * Cria os diretórios de upload com tratamento de erros adequado
+ * 
+ * @param string $path Caminho a ser criado
+ * @return bool Se o diretório existe ou foi criado com sucesso
+ */
+function create_directory_safe($path) {
+    if (is_dir($path)) {
+        return true;
+    }
+    
+    $result = @mkdir($path, 0777, true);
+    
+    // Se falhou em criar, tenta determinar se já existe (concorrência)
+    if (!$result && is_dir($path)) {
+        return true;
+    }
+    
+    return $result;
+}
+
+/**
  * Cria a estrutura de diretórios para um upload
  * @param string $base_path Caminho base (uploads/)
  * @param array $subdirs Array com os subdiretórios a serem criados
  * @return string Caminho completo criado
  */
 function create_upload_path($base_path, $subdirs) {
-    $log_file = dirname(__DIR__) . '/logs/upload_debug.log';
-    $timestamp = date('Y-m-d H:i:s');
-    
-    file_put_contents($log_file, "[$timestamp] Criando caminho de upload: $base_path\n", FILE_APPEND);
-    
-    // Garantir que o diretório base existe
-    if (!is_dir($base_path)) {
-        mkdir($base_path, 0777, true);
-        file_put_contents($log_file, "[$timestamp] Diretório base criado: $base_path\n", FILE_APPEND);
+    // Verificar e criar diretório base
+    if (!create_directory_safe($base_path)) {
+        return false;
     }
     
     $current_path = $base_path;
+    
+    // Criar subdiretórios
     foreach ($subdirs as $dir) {
+        if (empty($dir)) continue;
+        
         $current_path .= '/' . $dir;
-        if (!is_dir($current_path)) {
-            if (mkdir($current_path, 0777, true)) {
-                file_put_contents($log_file, "[$timestamp] Subdiretório criado: $current_path\n", FILE_APPEND);
-            } else {
-                file_put_contents($log_file, "[$timestamp] ERRO ao criar subdiretório: $current_path\n", FILE_APPEND);
-            }
+        
+        if (!create_directory_safe($current_path)) {
+            return false;
         }
     }
+    
     return $current_path;
 }
 
@@ -49,195 +95,62 @@ function generate_unique_filename($original_name, $prefix = '') {
 }
 
 /**
- * Move um arquivo para o diretório de destino com múltiplas tentativas
- * @param string $tmp_name Nome temporário do arquivo
- * @param string $destination Caminho de destino completo
- * @param bool $log_enabled Ativar logging detalhado
- * @return bool True se o arquivo foi movido com sucesso
+ * Versão segura da função move_uploaded_file
+ * Realiza validações adicionais e sanitização
+ * 
+ * @param string $tmp_name Caminho temporário do arquivo
+ * @param string $destination Destino final do arquivo
+ * @param bool $log_enabled Habilitar logs detalhados
+ * @return bool Se a operação foi bem sucedida
  */
 function move_uploaded_file_safe($tmp_name, $destination, $log_enabled = true) {
-    // Garantir que o diretório de log existe
-    $log_dir = dirname(__DIR__) . '/logs';
-    if (!is_dir($log_dir)) {
-        mkdir($log_dir, 0777, true);
-    }
-    
-    $log_file = $log_dir . '/upload_debug.log';
+    $log_file = dirname(__DIR__) . '/logs/upload_debug.log';
     $timestamp = date('Y-m-d H:i:s');
     
     if ($log_enabled) {
-        file_put_contents($log_file, "\n[$timestamp] === INICIANDO UPLOAD SEGURO ===\n", FILE_APPEND);
-        file_put_contents($log_file, "[$timestamp] Arquivo origem: $tmp_name\n", FILE_APPEND);
-        file_put_contents($log_file, "[$timestamp] Destino: $destination\n", FILE_APPEND);
+        safe_log($log_file, "\n[$timestamp] === INICIANDO UPLOAD SEGURO ===\n");
+        safe_log($log_file, "[$timestamp] Arquivo origem: $tmp_name\n");
+        safe_log($log_file, "[$timestamp] Destino: $destination\n");
     }
     
-    // Converter caminho relativo para absoluto
-    $absolute_path = $destination;
-    if (strpos($destination, '/') !== 0 && strpos($destination, ':') === false) {
-        $absolute_path = dirname(__DIR__) . '/' . $destination;
-    }
-    
-    if ($log_enabled) {
-        file_put_contents($log_file, "[$timestamp] Caminho absoluto: $absolute_path\n", FILE_APPEND);
-    }
-    
-    // Criar diretório se não existir
-    $dir = dirname($absolute_path);
-    if ($log_enabled) {
-        file_put_contents($log_file, "[$timestamp] Diretório destino: $dir\n", FILE_APPEND);
-    }
-    
-    if (!is_dir($dir)) {
+    // Verificar se o arquivo de origem existe e é um arquivo enviado
+    if (!is_uploaded_file($tmp_name)) {
         if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] Criando diretório: $dir\n", FILE_APPEND);
+            safe_log($log_file, "[$timestamp] ERRO: O arquivo não é um upload válido\n");
         }
-        
-        $mkdir_result = mkdir($dir, 0777, true);
-        
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] Resultado da criação: " . ($mkdir_result ? "Sucesso" : "Falha") . "\n", FILE_APPEND);
-        }
-        
-        if (!$mkdir_result) {
-            if ($log_enabled) {
-                $error = error_get_last();
-                file_put_contents($log_file, "[$timestamp] ERRO ao criar diretório: " . ($error ? $error['message'] : 'Desconhecido') . "\n", FILE_APPEND);
-            }
+        return false;
+    }
+    
+    // Garantir que o diretório de destino existe
+    $destination_dir = dirname($destination);
+    if (!is_dir($destination_dir)) {
+        if (!create_directory_safe($destination_dir) && $log_enabled) {
+            safe_log($log_file, "[$timestamp] ERRO: Não foi possível criar o diretório de destino: $destination_dir\n");
             return false;
         }
     }
     
-    // Verificar se o arquivo temporário existe
-    if (!file_exists($tmp_name)) {
+    // Tentar mover o arquivo
+    if (!move_uploaded_file($tmp_name, $destination)) {
         if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] ERRO: Arquivo temporário não existe\n", FILE_APPEND);
+            safe_log($log_file, "[$timestamp] ERRO: Falha ao mover o arquivo\n");
         }
         return false;
-    }
-    
-    // Verificar se o arquivo temporário é legível
-    if (!is_readable($tmp_name)) {
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] ERRO: Arquivo temporário não é legível\n", FILE_APPEND);
-        }
-        return false;
-    }
-    
-    // Tentativas de upload usando diferentes métodos
-    $upload_success = false;
-    
-    // Método 1: move_uploaded_file (melhor para uploads reais de formulários)
-    if (is_uploaded_file($tmp_name)) {
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] Tentativa 1: move_uploaded_file\n", FILE_APPEND);
-        }
-        
-        if (move_uploaded_file($tmp_name, $absolute_path)) {
-            $upload_success = true;
-            if ($log_enabled) {
-                file_put_contents($log_file, "[$timestamp] SUCESSO com move_uploaded_file\n", FILE_APPEND);
-            }
-        } else {
-            if ($log_enabled) {
-                $error = error_get_last();
-                file_put_contents($log_file, "[$timestamp] FALHA com move_uploaded_file: " . ($error ? $error['message'] : 'Desconhecido') . "\n", FILE_APPEND);
-            }
-        }
-    } else {
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] Não é um upload de formulário, pulando move_uploaded_file\n", FILE_APPEND);
-        }
-    }
-    
-    // Método 2: copy (alternativa para qualquer arquivo)
-    if (!$upload_success) {
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] Tentativa 2: copy\n", FILE_APPEND);
-        }
-        
-        if (copy($tmp_name, $absolute_path)) {
-            $upload_success = true;
-            if ($log_enabled) {
-                file_put_contents($log_file, "[$timestamp] SUCESSO com copy\n", FILE_APPEND);
-            }
-            
-            // Tentar remover o arquivo original após a cópia (apenas se não for um upload real)
-            if (!is_uploaded_file($tmp_name)) {
-                @unlink($tmp_name);
-            }
-        } else {
-            if ($log_enabled) {
-                $error = error_get_last();
-                file_put_contents($log_file, "[$timestamp] FALHA com copy: " . ($error ? $error['message'] : 'Desconhecido') . "\n", FILE_APPEND);
-            }
-        }
-    }
-    
-    // Método 3: file_put_contents (último recurso)
-    if (!$upload_success) {
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] Tentativa 3: file_put_contents\n", FILE_APPEND);
-        }
-        
-        $file_content = @file_get_contents($tmp_name);
-        if ($file_content !== false) {
-            if (file_put_contents($absolute_path, $file_content)) {
-                $upload_success = true;
-                if ($log_enabled) {
-                    file_put_contents($log_file, "[$timestamp] SUCESSO com file_put_contents\n", FILE_APPEND);
-                }
-                
-                // Tentar remover o arquivo original (apenas se não for um upload real)
-                if (!is_uploaded_file($tmp_name)) {
-                    @unlink($tmp_name);
-                }
-            } else {
-                if ($log_enabled) {
-                    $error = error_get_last();
-                    file_put_contents($log_file, "[$timestamp] FALHA com file_put_contents: " . ($error ? $error['message'] : 'Desconhecido') . "\n", FILE_APPEND);
-                }
-            }
-        } else {
-            if ($log_enabled) {
-                file_put_contents($log_file, "[$timestamp] FALHA ao ler conteúdo do arquivo temporário\n", FILE_APPEND);
-            }
-        }
-    }
-    
-    // Verificar resultado final
-    if ($upload_success) {
-        // Definir permissões para o arquivo
-        chmod($absolute_path, 0644);
-        
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] Arquivo salvo com sucesso em $absolute_path\n", FILE_APPEND);
-            file_put_contents($log_file, "[$timestamp] Permissões definidas: 0644\n", FILE_APPEND);
-        }
-    } else {
-        if ($log_enabled) {
-            file_put_contents($log_file, "[$timestamp] FALHA: Todas as tentativas de upload falharam\n", FILE_APPEND);
-            
-            // Verificar permissões de diretórios
-            $tmp_dir_perms = substr(sprintf('%o', fileperms(dirname($tmp_name))), -4);
-            $dest_dir_perms = substr(sprintf('%o', fileperms($dir)), -4);
-            
-            file_put_contents($log_file, "[$timestamp] Permissões do diretório temporário: $tmp_dir_perms\n", FILE_APPEND);
-            file_put_contents($log_file, "[$timestamp] Permissões do diretório de destino: $dest_dir_perms\n", FILE_APPEND);
-            
-            // Verificar espaço em disco
-            $disk_free = disk_free_space($dir);
-            $file_size = filesize($tmp_name);
-            
-            file_put_contents($log_file, "[$timestamp] Espaço livre no disco: " . format_bytes($disk_free) . "\n", FILE_APPEND);
-            file_put_contents($log_file, "[$timestamp] Tamanho do arquivo: " . format_bytes($file_size) . "\n", FILE_APPEND);
-        }
     }
     
     if ($log_enabled) {
-        file_put_contents($log_file, "[$timestamp] === FIM DO UPLOAD ===\n", FILE_APPEND);
+        safe_log($log_file, "[$timestamp] Arquivo movido com sucesso\n");
     }
     
-    return $upload_success;
+    // Verificar permissões
+    chmod($destination, 0644);
+    
+    if ($log_enabled) {
+        safe_log($log_file, "[$timestamp] Permissões definidas: 0644\n");
+        safe_log($log_file, "[$timestamp] === UPLOAD CONCLUÍDO ===\n");
+    }
+    
+    return true;
 }
 
 /**
@@ -455,8 +368,9 @@ function remove_file_and_empty_dir($file_path) {
 }
 
 /**
- * Retorna o caminho relativo para upload baseado no tipo
- * @param string $type Tipo de upload (profile, blog, reimbursement, reports)
+ * Retorna o caminho para upload baseado no tipo e parâmetros
+ * 
+ * @param string $type Tipo de upload (user, post, etc)
  * @param array $params Parâmetros adicionais (user_id, post_id, etc)
  * @return string Caminho relativo para upload
  */
@@ -464,60 +378,63 @@ function get_upload_path($type, $params = []) {
     $log_file = dirname(__DIR__) . '/logs/upload_debug.log';
     $timestamp = date('Y-m-d H:i:s');
     
-    file_put_contents($log_file, "[$timestamp] get_upload_path chamado para tipo: $type, params: " . json_encode($params) . "\n", FILE_APPEND);
+    safe_log($log_file, "[$timestamp] get_upload_path chamado para tipo: $type, params: " . json_encode($params) . "\n");
     
     $base_path = dirname(__DIR__) . '/uploads';
     
-    file_put_contents($log_file, "[$timestamp] Base path calculado: $base_path\n", FILE_APPEND);
+    safe_log($log_file, "[$timestamp] Base path calculado: $base_path\n");
     
     // Criar o diretório base se não existir
     if (!is_dir($base_path)) {
-        file_put_contents($log_file, "[$timestamp] Diretório base não existe, tentando criar: $base_path\n", FILE_APPEND);
-        $mkdir_result = mkdir($base_path, 0777, true);
-        file_put_contents($log_file, "[$timestamp] Resultado da criação do diretório base: " . ($mkdir_result ? "Sucesso" : "Falha") . "\n", FILE_APPEND);
+        safe_log($log_file, "[$timestamp] Diretório base não existe, tentando criar: $base_path\n");
+        if (!create_directory_safe($base_path)) {
+            safe_log($log_file, "[$timestamp] ERRO ao criar diretório base: $base_path\n");
+            return false;
+        }
     }
     
-    switch($type) {
-        case 'reimbursement':
-            if (!isset($params['reimbursement_id'])) {
-                throw new Exception('ID do reembolso é necessário');
-            }
-            $path = $base_path . '/reimbursements/' . $params['reimbursement_id'];
-            break;
-        case 'reports':
-            if (!isset($params['report_id'])) {
-                throw new Exception('ID do relatório é necessário');
-            }
-            $path = $base_path . '/reports/' . $params['report_id'];
-            break;
+    $year = date('Y');
+    $month = date('m');
+    
+    $path_parts = [$type];
+    
+    // Adicionar ano e mês para organização
+    $path_parts[] = $year;
+    $path_parts[] = $month;
+    
+    // Adicionar parâmetros específicos
+    switch ($type) {
         case 'profile':
-            $path = $base_path . '/profiles';
-            break;
-        case 'blog':
-            if (!isset($params['post_id'])) {
-                throw new Exception('ID do post é necessário');
+            if (isset($params['user_id'])) {
+                $path_parts[] = 'user_' . $params['user_id'];
             }
-            $path = $base_path . '/blog/' . $params['post_id'];
+            break;
+        case 'report':
+            if (isset($params['report_id'])) {
+                $path_parts[] = 'report_' . $params['report_id'];
+            }
+            break;
+        case 'reimbursement':
+            if (isset($params['reimbursement_id'])) {
+                $path_parts[] = 'reimb_' . $params['reimbursement_id'];
+            }
             break;
         default:
-            $path = $base_path . '/misc';
+            // Tipo genérico
+            break;
     }
     
-    // Criar o diretório específico se não existir
-    if (!is_dir($path)) {
-        file_put_contents($log_file, "[$timestamp] Diretório específico não existe, tentando criar: $path\n", FILE_APPEND);
-        $mkdir_result = mkdir($path, 0777, true);
-        file_put_contents($log_file, "[$timestamp] Resultado da criação do diretório específico: " . ($mkdir_result ? "Sucesso" : "Falha") . "\n", FILE_APPEND);
-        if (!$mkdir_result) {
-            file_put_contents($log_file, "[$timestamp] ERRO ao criar diretório: " . error_get_last()['message'] . "\n", FILE_APPEND);
-        }
-    } else {
-        file_put_contents($log_file, "[$timestamp] Diretório específico já existe: $path\n", FILE_APPEND);
-    }
+    $upload_dir = create_upload_path($base_path, $path_parts);
     
-    $relative_path = 'uploads' . substr($path, strlen($base_path));
-    file_put_contents($log_file, "[$timestamp] Caminho relativo calculado: $relative_path\n", FILE_APPEND);
+    // Aqui está a mudança principal: retornar o caminho relativo ao diretório raiz
+    // Em vez do caminho absoluto do sistema de arquivos
+    $relative_path = 'uploads/' . implode('/', $path_parts);
     
-    // Retornar o caminho relativo para armazenamento no banco de dados
-    return $relative_path;
+    safe_log($log_file, "[$timestamp] Caminho final para upload: $relative_path\n");
+    
+    // Retornar tanto o caminho absoluto (para salvar o arquivo) quanto o caminho relativo (para armazenar no banco)
+    return [
+        'absolute_path' => $upload_dir,
+        'relative_path' => $relative_path
+    ];
 } 

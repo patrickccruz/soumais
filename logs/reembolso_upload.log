@@ -1,0 +1,105 @@
+
+[2025-03-13 12:57:32] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 12:57:32] Arquivo recebido: Captura de tela 2024-12-18 104721.png
+[2025-03-13 12:57:32] Tamanho: 108558 bytes
+[2025-03-13 12:57:32] Tipo informado: image/png
+[2025-03-13 12:57:32] Validando tipo de arquivo: image/png
+[2025-03-13 12:57:32] Tipos permitidos: application/pdf, application/x-pdf, image/jpeg, image/png, image/jpg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+[2025-03-13 12:57:32] Tipo de arquivo válido
+[2025-03-13 12:57:32] Validando tamanho do arquivo: 106.01 KB
+[2025-03-13 12:57:32] Tamanho máximo permitido: 10 MB
+[2025-03-13 12:57:32] Tamanho do arquivo válido
+[2025-03-13 12:57:32] Nome de arquivo gerado: reembolso_67d2d63c62f53_3515.png
+[2025-03-13 12:57:32] Caminho completo: /var/www/html/soudigital/uploads/reimbursements/5/reembolso_67d2d63c62f53_3515.png
+[2025-03-13 12:57:32] Upload bem-sucedido para: /var/www/html/soudigital/uploads/reimbursements/5/reembolso_67d2d63c62f53_3515.png
+[2025-03-13 12:57:32] === FIM DO PROCESSAMENTO (SUCESSO) ===
+
+[2025-03-13 13:06:47] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 13:06:47] Arquivo recebido: Captura de tela 2025-03-13 093807.png
+[2025-03-13 13:06:47] Tamanho: 24523 bytes
+[2025-03-13 13:06:47] Tipo informado: image/png
+[2025-03-13 13:06:47] Validando tipo de arquivo: image/png
+[2025-03-13 13:06:47] Tipos permitidos: application/pdf, application/x-pdf, image/jpeg, image/png, image/jpg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+[2025-03-13 13:06:47] Tipo de arquivo válido
+[2025-03-13 13:06:47] Validando tamanho do arquivo: 23.95 KB
+[2025-03-13 13:06:47] Tamanho máximo permitido: 10 MB
+[2025-03-13 13:06:47] Tamanho do arquivo válido
+[2025-03-13 13:06:47] Nome de arquivo gerado: reembolso_67d2d8670b4d2_5875.png
+[2025-03-13 13:06:47] Caminho completo: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670b4d2_5875.png
+[2025-03-13 13:06:47] Upload bem-sucedido para: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670b4d2_5875.png
+[2025-03-13 13:06:47] === FIM DO PROCESSAMENTO (SUCESSO) ===
+
+[2025-03-13 13:06:47] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 13:06:47] Arquivo recebido: Captura de tela 2025-03-13 095853.png
+[2025-03-13 13:06:47] Tamanho: 20546 bytes
+[2025-03-13 13:06:47] Tipo informado: image/png
+[2025-03-13 13:06:47] Validando tipo de arquivo: image/png
+[2025-03-13 13:06:47] Tipos permitidos: application/pdf, application/x-pdf, image/jpeg, image/png, image/jpg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+[2025-03-13 13:06:47] Tipo de arquivo válido
+[2025-03-13 13:06:47] Validando tamanho do arquivo: 20.06 KB
+[2025-03-13 13:06:47] Tamanho máximo permitido: 10 MB
+[2025-03-13 13:06:47] Tamanho do arquivo válido
+[2025-03-13 13:06:47] Nome de arquivo gerado: reembolso_67d2d8670b882_8889.png
+[2025-03-13 13:06:47] Caminho completo: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670b882_8889.png
+[2025-03-13 13:06:47] Upload bem-sucedido para: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670b882_8889.png
+[2025-03-13 13:06:47] === FIM DO PROCESSAMENTO (SUCESSO) ===
+
+[2025-03-13 13:06:47] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 13:06:47] Arquivo recebido: RAT.pdf
+[2025-03-13 13:06:47] Tamanho: 2220784 bytes
+[2025-03-13 13:06:47] Tipo informado: application/pdf
+[2025-03-13 13:06:47] Validando tipo de arquivo: application/pdf
+[2025-03-13 13:06:47] Tipos permitidos: application/pdf, application/x-pdf, image/jpeg, image/png, image/jpg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+[2025-03-13 13:06:47] Tipo de arquivo válido
+[2025-03-13 13:06:47] Validando tamanho do arquivo: 2.12 MB
+[2025-03-13 13:06:47] Tamanho máximo permitido: 10 MB
+[2025-03-13 13:06:47] Tamanho do arquivo válido
+[2025-03-13 13:06:47] Nome de arquivo gerado: reembolso_67d2d8670be9c_5136.pdf
+[2025-03-13 13:06:47] Caminho completo: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670be9c_5136.pdf
+[2025-03-13 13:06:47] Upload bem-sucedido para: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670be9c_5136.pdf
+[2025-03-13 13:06:47] === FIM DO PROCESSAMENTO (SUCESSO) ===
+
+[2025-03-13 13:13:12] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 13:13:12] Arquivo recebido: Captura de tela 2025-03-13 093807.png
+[2025-03-13 13:13:12] Tamanho: 24523 bytes
+[2025-03-13 13:13:12] Tipo informado: image/png
+[2025-03-13 13:13:12] Validando tipo de arquivo: image/png
+[2025-03-13 13:13:12] Tipos permitidos: application/pdf, application/x-pdf, image/jpeg, image/png, image/jpg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+[2025-03-13 13:13:12] Tipo de arquivo válido
+[2025-03-13 13:13:12] Validando tamanho do arquivo: 23.95 KB
+[2025-03-13 13:13:12] Tamanho máximo permitido: 10 MB
+[2025-03-13 13:13:12] Tamanho do arquivo válido
+[2025-03-13 13:13:12] Nome de arquivo gerado: reembolso_67d2d9e801d9c_2156.png
+[2025-03-13 13:13:12] Caminho completo: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e801d9c_2156.png
+[2025-03-13 13:13:12] Upload bem-sucedido para: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e801d9c_2156.png
+[2025-03-13 13:13:12] === FIM DO PROCESSAMENTO (SUCESSO) ===
+
+[2025-03-13 13:13:12] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 13:13:12] Arquivo recebido: Captura de tela 2025-03-13 095853.png
+[2025-03-13 13:13:12] Tamanho: 20546 bytes
+[2025-03-13 13:13:12] Tipo informado: image/png
+[2025-03-13 13:13:12] Validando tipo de arquivo: image/png
+[2025-03-13 13:13:12] Tipos permitidos: application/pdf, application/x-pdf, image/jpeg, image/png, image/jpg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+[2025-03-13 13:13:12] Tipo de arquivo válido
+[2025-03-13 13:13:12] Validando tamanho do arquivo: 20.06 KB
+[2025-03-13 13:13:12] Tamanho máximo permitido: 10 MB
+[2025-03-13 13:13:12] Tamanho do arquivo válido
+[2025-03-13 13:13:12] Nome de arquivo gerado: reembolso_67d2d9e802175_6153.png
+[2025-03-13 13:13:12] Caminho completo: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e802175_6153.png
+[2025-03-13 13:13:12] Upload bem-sucedido para: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e802175_6153.png
+[2025-03-13 13:13:12] === FIM DO PROCESSAMENTO (SUCESSO) ===
+
+[2025-03-13 13:13:12] === INICIANDO PROCESSAMENTO DE UPLOAD ===
+[2025-03-13 13:13:12] Arquivo recebido: RAT.pdf
+[2025-03-13 13:13:12] Tamanho: 2220784 bytes
+[2025-03-13 13:13:12] Tipo informado: application/pdf
+[2025-03-13 13:13:12] Validando tipo de arquivo: application/pdf
+[2025-03-13 13:13:12] Tipos permitidos: application/pdf, application/x-pdf, image/jpeg, image/png, image/jpg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+[2025-03-13 13:13:12] Tipo de arquivo válido
+[2025-03-13 13:13:12] Validando tamanho do arquivo: 2.12 MB
+[2025-03-13 13:13:12] Tamanho máximo permitido: 10 MB
+[2025-03-13 13:13:12] Tamanho do arquivo válido
+[2025-03-13 13:13:12] Nome de arquivo gerado: reembolso_67d2d9e8027be_1323.pdf
+[2025-03-13 13:13:12] Caminho completo: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e8027be_1323.pdf
+[2025-03-13 13:13:12] Upload bem-sucedido para: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e8027be_1323.pdf
+[2025-03-13 13:13:12] === FIM DO PROCESSAMENTO (SUCESSO) ===

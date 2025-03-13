@@ -235,16 +235,22 @@ include_once '../includes/sidebar.php';
                               <?php 
                               $arquivos = explode(',', $reembolso['arquivo_path']);
                               foreach($arquivos as $arquivo):
+                                // Corrigir o caminho para funcionar com Ngrok
+                                $arquivo_url = str_replace('soudigital/', '', "/{$arquivo}");
+                                $nome = basename($arquivo);
                                 $ext = strtolower(pathinfo($arquivo, PATHINFO_EXTENSION));
+                                
                                 if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])):
                               ?>
-                                <a href="../<?php echo $arquivo; ?>" target="_blank">
-                                  <img src="../<?php echo $arquivo; ?>" class="arquivo-preview" alt="Comprovante">
+                                <a href="<?php echo $arquivo_url; ?>" target="_blank" class="m-2">
+                                  <img src="<?php echo $arquivo_url; ?>" class="arquivo-preview" alt="Comprovante">
                                 </a>
                               <?php else: ?>
-                                <a href="../<?php echo $arquivo; ?>" target="_blank" class="btn btn-outline-primary btn-sm">
-                                  <i class="bi bi-file-earmark-text"></i>
-                                  Ver Arquivo
+                                <a href="<?php echo $arquivo_url; ?>" target="_blank" class="btn btn-outline-primary m-2" 
+                                   style="min-width: 120px; min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center;"
+                                   <?php if ($ext === 'pdf'): ?>data-type="application/pdf" rel="noopener noreferrer"<?php endif; ?>>
+                                  <i class="bi bi-file-earmark-<?php echo $ext === 'pdf' ? 'pdf-fill text-danger' : 'text-fill text-primary'; ?>" style="font-size: 2.5em;"></i>
+                                  <span class="mt-2"><?php echo $ext === 'pdf' ? 'Ver PDF' : 'Ver Arquivo'; ?></span>
                                 </a>
                               <?php 
                                 endif;
@@ -293,6 +299,23 @@ include_once '../includes/sidebar.php';
       const monthFilter = document.getElementById('monthFilter');
       const reembolsosContainer = document.getElementById('reembolsosContainer');
       const refreshBtn = document.getElementById('refreshBtn');
+
+      // Melhorar a exibição de PDFs
+      document.querySelectorAll('a[data-type="application/pdf"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const url = this.getAttribute('href');
+          
+          // Tentar abrir em uma nova janela com tamanho específico
+          const pdfWindow = window.open(url, '_blank', 'width=800,height=600,toolbar=0,menubar=0,location=0');
+          
+          // Fallback se o pop-up for bloqueado
+          if (!pdfWindow || pdfWindow.closed || typeof pdfWindow.closed === 'undefined') {
+            // Usar o método normal de abrir em nova aba
+            window.open(url, '_blank', 'noopener,noreferrer');
+          }
+        });
+      });
 
       // Função para atualizar a página
       refreshBtn.addEventListener('click', function() {

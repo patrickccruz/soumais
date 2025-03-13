@@ -1,0 +1,113 @@
+[13-Mar-2025 12:56:54 UTC] [2025-03-13 12:56:54] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 12:56:54 UTC] [2025-03-13 12:56:54] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Tentando conectar ao banco de dados
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Conexão ao banco de dados estabelecida com sucesso
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Dados recebidos: Data=2025-03-13, Número=12539, Tipo=transporte, Valor=50.00
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Reembolso inserido com sucesso, ID: 5
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Processando 1 arquivos
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Diretório criado com sucesso: /var/www/html/soudigital/uploads/reimbursements/5
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] === PROCESSANDO ARQUIVOS REEMBOLSO ID: 5 ===
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Processando arquivo 1: Captura de tela 2024-12-18 104721.png
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] Destino do arquivo: /var/www/html/soudigital/uploads/reimbursements/5/reembolso_67d2d63c62c2f
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] EXCEÇÃO no processamento do arquivo: Table 'sou_digital.reembolso_arquivos' doesn't exist
+[13-Mar-2025 12:57:32 UTC] [2025-03-13 12:57:32] === FIM DO PROCESSAMENTO DE ARQUIVOS REEMBOLSO ===
+[13-Mar-2025 12:57:33 UTC] [2025-03-13 12:57:32] Processo de reembolso completado com sucesso
+[13-Mar-2025 12:57:33 UTC] [2025-03-13 12:57:32] Conexões e recursos limpos
+[13-Mar-2025 13:05:56 UTC] [2025-03-13 13:05:56] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:05:56 UTC] [2025-03-13 13:05:56] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:06:46 UTC] [2025-03-13 13:06:46] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:06:46 UTC] [2025-03-13 13:06:46] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:06:46 UTC] [2025-03-13 13:06:46] Tentando conectar ao banco de dados
+[13-Mar-2025 13:06:46 UTC] [2025-03-13 13:06:46] Conexão ao banco de dados estabelecida com sucesso
+[13-Mar-2025 13:06:46 UTC] [2025-03-13 13:06:46] Dados recebidos: Data=2025-03-13, Número=42514, Tipo=pedagio, Valor=5.00
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Reembolso inserido com sucesso, ID: 6
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Processando 3 arquivos
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Diretório criado com sucesso: /var/www/html/soudigital/uploads/reimbursements/6
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] === PROCESSANDO ARQUIVOS REEMBOLSO ID: 6 ===
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Processando arquivo 1: Captura de tela 2025-03-13 093807.png
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Destino do arquivo: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670b2a1
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] EXCEÇÃO no processamento do arquivo: Table 'sou_digital.reembolso_arquivos' doesn't exist
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Processando arquivo 2: Captura de tela 2025-03-13 095853.png
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Destino do arquivo: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670b6e8
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] EXCEÇÃO no processamento do arquivo: Table 'sou_digital.reembolso_arquivos' doesn't exist
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Processando arquivo 3: RAT.pdf
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Destino do arquivo: /var/www/html/soudigital/uploads/reimbursements/6/reembolso_67d2d8670ba2b
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] EXCEÇÃO no processamento do arquivo: Table 'sou_digital.reembolso_arquivos' doesn't exist
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] === FIM DO PROCESSAMENTO DE ARQUIVOS REEMBOLSO ===
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Processo de reembolso completado com sucesso
+[13-Mar-2025 13:06:47 UTC] [2025-03-13 13:06:46] Conexões e recursos limpos
+[13-Mar-2025 13:12:39 UTC] [2025-03-13 13:12:39] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:12:39 UTC] [2025-03-13 13:12:39] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:13:11 UTC] [2025-03-13 13:13:11] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:13:11 UTC] [2025-03-13 13:13:11] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:13:11 UTC] [2025-03-13 13:13:11] Tentando conectar ao banco de dados
+[13-Mar-2025 13:13:11 UTC] [2025-03-13 13:13:11] Conexão ao banco de dados estabelecida com sucesso
+[13-Mar-2025 13:13:11 UTC] [2025-03-13 13:13:11] Dados recebidos: Data=2025-03-13, Número=525415, Tipo=pedagio, Valor=54.00
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Reembolso inserido com sucesso, ID: 7
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Processando 3 arquivos
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Diretório criado com sucesso: /var/www/html/soudigital/uploads/reimbursements/7
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] === PROCESSANDO ARQUIVOS REEMBOLSO ID: 7 ===
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Processando arquivo 1: Captura de tela 2025-03-13 093807.png
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Destino do arquivo: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e801ba1
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] EXCEÇÃO no processamento do arquivo: Table 'sou_digital.reembolso_arquivos' doesn't exist
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Processando arquivo 2: Captura de tela 2025-03-13 095853.png
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Destino do arquivo: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e801fc6
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] EXCEÇÃO no processamento do arquivo: Table 'sou_digital.reembolso_arquivos' doesn't exist
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Processando arquivo 3: RAT.pdf
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Destino do arquivo: /var/www/html/soudigital/uploads/reimbursements/7/reembolso_67d2d9e802338
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] EXCEÇÃO no processamento do arquivo: Table 'sou_digital.reembolso_arquivos' doesn't exist
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] === FIM DO PROCESSAMENTO DE ARQUIVOS REEMBOLSO ===
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Processo de reembolso completado com sucesso
+[13-Mar-2025 13:13:12 UTC] [2025-03-13 13:13:11] Conexões e recursos limpos
+[13-Mar-2025 13:13:33 UTC] [2025-03-13 13:13:33] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:13:33 UTC] [2025-03-13 13:13:33] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:14:45 UTC] [2025-03-13 13:14:45] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:14:45 UTC] [2025-03-13 13:14:45] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:15:35 UTC] [2025-03-13 13:15:35] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:15:35 UTC] [2025-03-13 13:15:35] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:19:16 UTC] [2025-03-13 13:19:16] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:19:16 UTC] [2025-03-13 13:19:16] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Tentando conectar ao banco de dados
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Conexão ao banco de dados estabelecida com sucesso
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Dados recebidos: Data=2025-03-13, Número=524154, Tipo=alimentacao, Valor=100.00
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Reembolso inserido com sucesso, ID: 8
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Processando 4 arquivos
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Usando diretório de upload: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_8
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Caminho relativo base: soudigital/uploads/reimbursement/2025/03/reimb_8
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] === PROCESSANDO ARQUIVOS REEMBOLSO ID: 8 ===
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Processando arquivo 1: Captura de tela 2025-03-11 135500.png
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Arquivo processado com sucesso: soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774e66e_1871.png
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Processando arquivo 2: Captura de tela 2025-03-12 211231.png
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Arquivo processado com sucesso: soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774e882_5367.png
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Processando arquivo 3: Captura de tela 2025-03-13 093807.png
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Arquivo processado com sucesso: soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774ea23_3240.png
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Processando arquivo 4: RAT.pdf
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Arquivo processado com sucesso: soudigital/uploads/reimbursement/2025/03/reimb_8/reembolso_67d2db774ee58_9965.pdf
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] === FIM DO PROCESSAMENTO DE ARQUIVOS REEMBOLSO ===
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Processo de reembolso completado com sucesso
+[13-Mar-2025 13:19:51 UTC] [2025-03-13 13:19:51] Conexões e recursos limpos
+[13-Mar-2025 13:26:25 UTC] [2025-03-13 13:26:25] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:26:25 UTC] [2025-03-13 13:26:25] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] ERRO: Função process_file_upload não encontrada
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Tentando conectar ao banco de dados
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Conexão ao banco de dados estabelecida com sucesso
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Dados recebidos: Data=2025-03-13, Número=5241, Tipo=estacionamento, Valor=57.00
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Reembolso inserido com sucesso, ID: 9
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Processando 3 arquivos
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Usando diretório de upload: /var/www/html/soudigital/uploads/reimbursement/2025/03/reimb_9
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Caminho relativo base: soudigital/uploads/reimbursement/2025/03/reimb_9
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] === PROCESSANDO ARQUIVOS REEMBOLSO ID: 9 ===
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Processando arquivo 1: Captura de tela 2025-03-12 211231.png
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Arquivo processado com sucesso: soudigital/uploads/reimbursement/2025/03/reimb_9/reembolso_67d2dd207f5e0_7082.png
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Processando arquivo 2: Captura de tela 2025-03-13 093807.png
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Arquivo processado com sucesso: soudigital/uploads/reimbursement/2025/03/reimb_9/reembolso_67d2dd207f7fa_6320.png
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Processando arquivo 3: RAT.pdf
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] Arquivo processado com sucesso: soudigital/uploads/reimbursement/2025/03/reimb_9/reembolso_67d2dd207fdbc_4558.pdf
+[13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] === FIM DO PROCESSAMENTO DE ARQUIVOS REEMBOLSO ===
+[13-Mar-2025 13:26:57 UTC] [2025-03-13 13:26:56] Processo de reembolso completado com sucesso
+[13-Mar-2025 13:26:57 UTC] [2025-03-13 13:26:56] Conexões e recursos limpos

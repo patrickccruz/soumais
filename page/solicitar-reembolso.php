@@ -119,8 +119,14 @@ try {
                 // Tamanho máximo (10MB)
                 $max_size = 10 * 1024 * 1024;
                 
-                // Criar diretório para este reembolso
-                $upload_dir = dirname(__DIR__) . '/uploads/reimbursements/' . $reembolso_id;
+                // Obter o caminho de upload usando a mesma função de editar-reembolso.php
+                $upload_info = get_upload_path('reimbursement', ['reimbursement_id' => $reembolso_id]);
+                $upload_dir = $upload_info['absolute_path'];
+                $relative_base_path = $upload_info['relative_path'];
+                
+                error_log("[$timestamp] Usando diretório de upload: $upload_dir");
+                error_log("[$timestamp] Caminho relativo base: $relative_base_path");
+                
                 if (!is_dir($upload_dir)) {
                     if (!mkdir($upload_dir, 0777, true)) {
                         error_log("[$timestamp] ERRO: Falha ao criar diretório para reembolso: $upload_dir");
@@ -132,6 +138,8 @@ try {
                 $log_file = dirname(__DIR__) . '/logs/reembolso_upload.log';
                 
                 error_log("[$timestamp] === PROCESSANDO ARQUIVOS REEMBOLSO ID: $reembolso_id ===");
+                
+                $arquivo_paths = array();
                 
                 for ($i = 0; $i < count($_FILES['arquivos']['name']); $i++) {
                     // Verificar se há arquivo selecionado
@@ -149,54 +157,40 @@ try {
                         continue;
                     }
                     
-                    // Criar estrutura para usar com process_file_upload
-                    $file = [
-                        'name' => $_FILES['arquivos']['name'][$i],
-                        'type' => $_FILES['arquivos']['type'][$i],
-                        'tmp_name' => $_FILES['arquivos']['tmp_name'][$i],
-                        'error' => $_FILES['arquivos']['error'][$i],
-                        'size' => $_FILES['arquivos']['size'][$i]
-                    ];
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mime_type = $finfo->file($_FILES['arquivos']['tmp_name'][$i]);
                     
-                    $destination = $upload_dir . '/reembolso_' . uniqid();
-                    
-                    error_log("[$timestamp] Destino do arquivo: $destination");
-                    
-                    // Verificar se a função existe
-                    if (!function_exists('process_file_upload')) {
-                        error_log("[$timestamp] ERRO FATAL: Função process_file_upload não está disponível");
-                        throw new Exception("Sistema de upload não está configurado corretamente");
+                    if (!is_allowed_file_type($mime_type, $allowed_types)) {
+                        error_log("[$timestamp] ERRO: Tipo de arquivo não permitido: $mime_type");
+                        continue;
                     }
+
+                    $new_filename = generate_unique_filename($_FILES['arquivos']['name'][$i], 'reembolso_');
+                    $full_path = $upload_dir . '/' . $new_filename;
                     
-                    // Processar upload
-                    try {
-                        $result = process_file_upload(
-                            $file,
-                            $destination,
-                            $allowed_types,
-                            $max_size,
-                            'reembolso_',
-                            $log_file
-                        );
+                    if (move_uploaded_file_safe($_FILES['arquivos']['tmp_name'][$i], $full_path)) {
+                        // Armazenar o caminho relativo para o banco de dados
+                        $relative_path = $relative_base_path . '/' . $new_filename;
+                        $arquivo_paths[] = $relative_path;
                         
-                        if ($result['success']) {
-                            $has_files = true;
-                            $files_paths[] = $result['path'];
-                            
-                            // Salvar referência do arquivo no banco
-                            $stmt = $conn->prepare("INSERT INTO reembolso_arquivos (reembolso_id, arquivo_path) VALUES (?, ?)");
-                            $stmt->bind_param("is", $reembolso_id, $result['path']);
-                            if (!$stmt->execute()) {
-                                error_log("[$timestamp] ERRO ao inserir registro de arquivo no banco: " . $stmt->error);
-                            }
-                            
-                            error_log("[$timestamp] Arquivo processado com sucesso: " . $result['path']);
-                        } else {
-                            error_log("[$timestamp] ERRO ao processar arquivo " . ($i+1) . ": " . $result['message']);
-                            // Continuamos o processo mesmo com erro em um arquivo
+                        $has_files = true;
+                        $files_paths[] = $relative_path;
+                        
+                        error_log("[$timestamp] Arquivo processado com sucesso: $relative_path");
+                    }
+                }
+                
+                // Atualizar o reembolso com os caminhos dos arquivos
+                if (!empty($arquivo_paths)) {
+                    $arquivo_path = implode(',', $arquivo_paths);
+                    $stmt = $conn->prepare("UPDATE reembolsos SET arquivo_path = ? WHERE id = ?");
+                    if (!$stmt) {
+                        error_log("[$timestamp] ERRO ao preparar consulta de atualização de arquivos: " . $conn->error);
+                    } else {
+                        $stmt->bind_param("si", $arquivo_path, $reembolso_id);
+                        if (!$stmt->execute()) {
+                            error_log("[$timestamp] ERRO ao atualizar arquivos do reembolso: " . $stmt->error);
                         }
-                    } catch (Exception $e) {
-                        error_log("[$timestamp] EXCEÇÃO no processamento do arquivo: " . $e->getMessage());
                     }
                 }
                 
