@@ -3,12 +3,17 @@
 --------------------------------------------------------------*/
 :root {
   scroll-behavior: smooth;
+  --primary-color: #1d8031;
+  --dark-green: #0f2714;
+  --light-green: #e0f0e3;
+  --black: #000000;
+  --white: #ffffff;
 }
 
 body {
   font-family: "Open Sans", sans-serif;
   background: #f6f9ff;
-  color: #444444;
+  color: #000000;
 }
 
 a {
@@ -17,7 +22,7 @@ a {
 }
 
 a:hover {
-  color: #71f583;
+  color: #1d8031;
   text-decoration: none;
 }
 
@@ -56,7 +61,7 @@ h6 {
   font-size: 24px;
   margin-bottom: 0;
   font-weight: 600;
-  color: #012970;
+  color: #0f2714;
 }
 
 /*--------------------------------------------------------------
@@ -83,7 +88,7 @@ h6 {
 }
 
 .back-to-top:hover {
-  background: #67f47a;
+  background: #1d8031;
   color: #fff;
 }
 
@@ -103,7 +108,7 @@ h6 {
   animation-duration: 0.2s;
   animation-fill-mode: both;
   border: 0;
-  box-shadow: 0 5px 30px 0 rgba(82, 63, 105, 0.2);
+  box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-menu .dropdown-header,
@@ -114,7 +119,7 @@ h6 {
 }
 
 .dropdown-menu .dropdown-footer a {
-  color: #444444;
+  color: #000000;
   text-decoration: underline;
 }
 
@@ -174,8 +179,8 @@ h6 {
 
 /* Light Backgrounds */
 .bg-primary-light {
-  background-color: #cfe2ff;
-  border-color: #cfe2ff;
+  background-color: #e0f0e3;
+  border-color: #e0f0e3;
 }
 
 .bg-secondary-light {
@@ -213,14 +218,14 @@ h6 {
   margin-bottom: 30px;
   border: 20px;
   border-radius: 5px;
-  box-shadow: 0px 0 30px rgba(1, 41, 112, 0.1);
+  box-shadow: 0px 0 30px rgba(0, 0, 0, 0.1);
 }
 
 .card-header,
 .card-footer {
   border-color: #ebeef4;
   background-color: #fff;
-  color: #798eb3;
+  color: #333333;
   padding: 15px;
 }
 
@@ -228,12 +233,12 @@ h6 {
   padding: 20px 20px 15px 20px;
   font-size: 18px;
   font-weight: 500;
-  color: #012970;
+  color: #0f2714;
   font-family: "Poppins", sans-serif;
 }
 
 .card-title span {
-  color: #899bbd;
+  color: #333333;
   font-size: 14px;
   font-weight: 400;
 }
@@ -274,7 +279,7 @@ h6 {
 }
 
 .accordion-button:not(.collapsed) {
-  color: #012970;
+  color: #0f2714;
   background-color: #f6f9ff;
 }
 
@@ -286,7 +291,7 @@ h6 {
 
 .accordion-flush .accordion-button:not(.collapsed) {
   box-shadow: none;
-  color: #4154f1;
+  color: #1d8031;
 }
 
 .accordion-flush .accordion-body {
@@ -299,25 +304,25 @@ h6 {
 .breadcrumb {
   font-size: 14px;
   font-family: "Nunito", sans-serif;
-  color: #899bbd;
+  color: #333333;
   font-weight: 600;
 }
 
 .breadcrumb a {
-  color: #899bbd;
+  color: #555555;
   transition: 0.3s;
 }
 
 .breadcrumb a:hover {
-  color: #538f51;
+  color: #1d8031;
 }
 
 .breadcrumb .breadcrumb-item::before {
-  color: #899bbd;
+  color: #555555;
 }
 
 .breadcrumb .active {
-  color: #51678f;
+  color: #000000;
   font-weight: 600;
 }
 
@@ -329,18 +334,18 @@ h6 {
 .nav-tabs-bordered .nav-link {
   margin-bottom: -2px;
   border: none;
-  color: #2c384e;
+  color: #333333;
 }
 
 .nav-tabs-bordered .nav-link:hover,
 .nav-tabs-bordered .nav-link:focus {
-  color: #5ef141;
+  color: #1d8031;
 }
 
 .nav-tabs-bordered .nav-link.active {
   background-color: #fff;
-  color: #4154f1;
-  border-bottom: 2px solid #4154f1;
+  color: #1d8031;
+  border-bottom: 2px solid #1d8031;
 }
 
 /*--------------------------------------------------------------
@@ -364,7 +369,7 @@ h6 {
 .logo span {
   font-size: 26px;
   font-weight: 700;
-  color: #020407;
+  color: #0f2714;
   font-family: "Nunito", sans-serif;
 }
 
@@ -372,7 +377,7 @@ h6 {
   transition: all 0.5s;
   z-index: 997;
   height: 60px;
-  box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   padding-left: 20px;
   /* Toggle Sidebar Button */
@@ -383,7 +388,7 @@ h6 {
   font-size: 32px;
   padding-left: 10px;
   cursor: pointer;
-  color: #020305;
+  color: #0f2714;
 }
 
 .header .search-bar {
@@ -398,7 +403,7 @@ h6 {
     left: 0;
     right: 0;
     padding: 20px;
-    box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1);
+    box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
     background: white;
     z-index: 9999;
     transition: 0.3s;
@@ -420,8 +425,8 @@ h6 {
 .header .search-form input {
   border: 0;
   font-size: 14px;
-  color: #012970;
-  border: 1px solid rgba(1, 41, 112, 0.2);
+  color: #0f2714;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 7px 38px 7px 8px;
   border-radius: 3px;
   transition: 0.3s;
@@ -431,8 +436,8 @@ h6 {
 .header .search-form input:focus,
 .header .search-form input:hover {
   outline: none;
-  box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
-  border: 1px solid rgba(1, 41, 112, 0.3);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .header .search-form button {
@@ -443,7 +448,7 @@ h6 {
 }
 
 .header .search-form button i {
-  color: #012970;
+  color: #0f2714;
 }
 
 /*--------------------------------------------------------------
@@ -460,13 +465,13 @@ h6 {
 
 .header-nav .nav-icon {
   font-size: 22px;
-  color: #012970;
+  color: #0f2714;
   margin-right: 25px;
   position: relative;
 }
 
 .header-nav .nav-profile {
-  color: #012970;
+  color: #0f2714;
 }
 
 .header-nav .nav-profile img {
@@ -511,7 +516,7 @@ h6 {
 .header-nav .notifications .notification-item p {
   font-size: 13px;
   margin-bottom: 3px;
-  color: #919191;
+  color: #333333;
 }
 
 .header-nav .notifications .notification-item:hover {
@@ -540,13 +545,13 @@ h6 {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 5px;
-  color: #444444;
+  color: #000000;
 }
 
 .header-nav .messages .message-item p {
   font-size: 13px;
   margin-bottom: 3px;
-  color: #919191;
+  color: #333333;
 }
 
 .header-nav .messages .message-item:hover {
@@ -563,7 +568,7 @@ h6 {
   font-size: 18px;
   margin-bottom: 0;
   font-weight: 600;
-  color: #444444;
+  color: #000000;
 }
 
 .header-nav .profile .dropdown-header span {
@@ -601,7 +606,7 @@ h6 {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
-  box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
   background-color: #fff;
 }
 
@@ -686,21 +691,21 @@ h6 {
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
+  color: #0f2714;
   background: #fff;
 }
 
 .sidebar-nav .nav-link.collapsed i {
-  color: #899bbd;
+  color: #333333;
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #41f14a;
+  color: #1d8031;
   background: #f6f9ff;
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #56f141;
+  color: #1d8031;
 }
 
 .sidebar-nav .nav-link .bi-chevron-down {
@@ -723,7 +728,7 @@ h6 {
   align-items: center;
   font-size: 14px;
   font-weight: 600;
-  color: #012970;
+  color: #0f2714;
   transition: 0.3;
   padding: 10px 0 10px 40px;
   transition: 0.3s;
@@ -738,11 +743,11 @@ h6 {
 
 .sidebar-nav .nav-content a:hover,
 .sidebar-nav .nav-content a.active {
-  color: #41f16d;
+  color: #1d8031;
 }
 
 .sidebar-nav .nav-content a.active i {
-  background-color: #4154f1;
+  background-color: #1d8031;
 }
 
 /*--------------------------------------------------------------
@@ -765,7 +770,7 @@ h6 {
 
 .dashboard .filter .icon:hover,
 .dashboard .filter .icon:focus {
-  color: #50f141;
+  color: #1d8031;
 }
 
 .dashboard .filter .dropdown-header {
@@ -793,7 +798,7 @@ h6 {
 
 .dashboard .info-card h6 {
   font-size: 28px;
-  color: #012970;
+  color: #0f2714;
   font-weight: 700;
   margin: 0;
   padding: 0;
@@ -809,8 +814,8 @@ h6 {
 }
 
 .dashboard .sales-card .card-icon {
-  color: #4154f1;
-  background: #f6f6fe;
+  color: #1d8031;
+  background: #e0f0e3;
 }
 
 .dashboard .revenue-card .card-icon {
@@ -843,7 +848,7 @@ h6 {
   width: 4px;
   top: 0;
   bottom: 0;
-  background-color: #eceefe;
+  background-color: #e0f0e3;
 }
 
 .dashboard .activity .activity-item .activity-badge {
@@ -889,12 +894,12 @@ h6 {
 }
 
 .dashboard .news h4 a {
-  color: #012970;
+  color: #0f2714;
   transition: 0.3s;
 }
 
 .dashboard .news h4 a:hover {
-  color: #5ef141;
+  color: #1d8031;
 }
 
 .dashboard .news p {
@@ -909,7 +914,7 @@ h6 {
 }
 
 .dashboard .recent-sales .table thead {
-  background: #f6f6fe;
+  background: #f6f9ff;
 }
 
 .dashboard .recent-sales .table thead th {
@@ -1019,7 +1024,7 @@ h6 {
 }
 
 .profile .profile-overview .card-title {
-  color: #012970;
+  color: #0f2714;
 }
 
 .profile .profile-overview .label {
@@ -1042,7 +1047,7 @@ h6 {
 .faq .basic h6 {
   font-size: 18px;
   font-weight: 600;
-  color: #4154f1;
+  color: #1d8031;
 }
 
 .faq .basic p {
@@ -1059,12 +1064,12 @@ h6 {
 .contact .info-box i {
   font-size: 38px;
   line-height: 0;
-  color: #4154f1;
+  color: #1d8031;
 }
 
 .contact .info-box h3 {
   font-size: 20px;
-  color: #012970;
+  color: #0f2714;
   font-weight: 700;
   margin: 20px 0 10px 0;
 }
@@ -1089,7 +1094,7 @@ h6 {
 .contact .php-email-form .sent-message {
   display: none;
   color: #fff;
-  background: #18d26e;
+  background: #1d8031;
   text-align: center;
   padding: 15px;
   margin-bottom: 24px;
@@ -1111,7 +1116,7 @@ h6 {
   width: 24px;
   height: 24px;
   margin: 0 10px -6px 0;
-  border: 3px solid #18d26e;
+  border: 3px solid #1d8031;
   border-top-color: #eee;
   animation: animate-loading 1s linear infinite;
 }
@@ -1126,7 +1131,7 @@ h6 {
 
 .contact .php-email-form input:focus,
 .contact .php-email-form textarea:focus {
-  border-color: #4154f1;
+  border-color: #1d8031;
 }
 
 .contact .php-email-form input {
@@ -1138,7 +1143,7 @@ h6 {
 }
 
 .contact .php-email-form button[type=submit] {
-  background: #4154f1;
+  background: #1d8031;
   border: 0;
   padding: 10px 30px;
   color: #fff;
@@ -1147,7 +1152,7 @@ h6 {
 }
 
 .contact .php-email-form button[type=submit]:hover {
-  background: #5969f3;
+  background: #0f2714;
 }
 
 @keyframes animate-loading {
@@ -1170,7 +1175,7 @@ h6 {
 .error-404 h1 {
   font-size: 180px;
   font-weight: 700;
-  color: #4154f1;
+  color: #1d8031;
   margin-bottom: 0;
   line-height: 150px;
 }
@@ -1178,18 +1183,18 @@ h6 {
 .error-404 h2 {
   font-size: 24px;
   font-weight: 700;
-  color: #012970;
+  color: #0f2714;
   margin-bottom: 30px;
 }
 
 .error-404 .btn {
-  background: #51678f;
+  background: #1d8031;
   color: #fff;
   padding: 8px 30px;
 }
 
 .error-404 .btn:hover {
-  background: #3e4f6f;
+  background: #0f2714;
 }
 
 @media (min-width: 992px) {
@@ -1205,7 +1210,7 @@ h6 {
   padding: 20px 0;
   font-size: 14px;
   transition: all 0.3s;
-  border-top: 1px solid #cddfff;
+  border-top: 1px solid #e0f0e3;
 }
 
 .footer .copyright {
@@ -1229,7 +1234,7 @@ h6 {
 }
 
 .toggle-sidebar-btn:hover {
-  color: #4154f1;
+  color: #1d8031;
 }
 
 /* Sidebar */
@@ -1245,7 +1250,7 @@ h6 {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #aab7cf transparent;
-  box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
   background-color: #fff;
 }
 
@@ -1283,4 +1288,593 @@ h6 {
 
 .sidebar::-webkit-scrollbar-thumb {
   background-color: #aab7cf;
+}
+
+/* Override Bootstrap button colors */
+.btn-primary {
+  background-color: #1d8031 !important;
+  border-color: #1d8031 !important;
+  color: white !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: #0f2714 !important;
+  border-color: #0f2714 !important;
+}
+
+.btn-outline-primary {
+  color: #1d8031 !important;
+  border-color: #1d8031 !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #1d8031 !important;
+  color: white !important;
+}
+
+.bg-primary {
+  background-color: #1d8031 !important;
+}
+
+.text-primary {
+  color: #1d8031 !important;
+}
+
+.border-primary {
+  border-color: #1d8031 !important;
+}
+
+.badge.bg-primary {
+  background-color: #1d8031 !important;
+}
+
+/* Override any other bootstrap colors that need to be changed */
+.nav-link.active {
+  color: #1d8031 !important;
+}
+
+.navbar-brand {
+  color: #0f2714 !important;
+}
+
+/* Elementos específicos da interface visualizada */
+#header {
+  background-color: white !important;
+  border-bottom: 1px solid #e0f0e3 !important;
+}
+
+.logo span {
+  color: #0f2714 !important;
+}
+
+.toggle-sidebar-btn {
+  color: #0f2714 !important;
+}
+
+/* Botões específicos da captura de tela */
+.btn-primary, 
+[class*="btn-outline-primary"],
+.badge.bg-primary, 
+.btn.btn-primary, 
+a.bg-primary {
+  background-color: #1d8031 !important;
+  border-color: #1d8031 !important;
+  color: white !important;
+}
+
+.btn-primary:hover, 
+[class*="btn-outline-primary"]:hover,
+.btn.btn-primary:hover, 
+a.bg-primary:hover {
+  background-color: #0f2714 !important;
+  border-color: #0f2714 !important;
+}
+
+/* Específicos para pagetitle */
+.pagetitle h1 {
+  color: #0f2714 !important;
+}
+
+/* Override para os botões no blog */
+[id*="blog"] .btn-primary, 
+[id*="blog"] .badge.bg-primary {
+  background-color: #1d8031 !important;
+  border-color: #1d8031 !important;
+}
+
+/* Forçar sobrescrita com !important para botões azuis específicos */
+#novo-post, 
+#gerenciar-posts,
+a[href*="post"] {
+  background-color: #1d8031 !important;
+  border-color: #1d8031 !important;
+  color: white !important;
+}
+
+/* Garantir que as notificações usem as cores corretas */
+.notification-badge {
+  background-color: #1d8031 !important;
+}
+
+/* Certificar-se que os links na sidebar usam as cores corretas */
+.sidebar-nav .nav-link.active,
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-content a:hover,
+.sidebar-nav .nav-content a.active {
+  color: #1d8031 !important;
+  background-color: #f6f9ff !important;
+}
+
+.sidebar-nav .nav-content a.active i {
+  background-color: #1d8031 !important;
+}
+
+/* Forçar cores em todos os elementos bootstrap */
+.btn-success {
+  background-color: #1d8031 !important;
+  border-color: #1d8031 !important;
+}
+
+.btn-danger {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+/* Limpar cache usando hack CSS */
+* {
+  transition: background-color 0.0001s;
+}
+
+/*--------------------------------------------------------------
+# Consolidação de CSS - Fix Blue Colors
+--------------------------------------------------------------*/
+/**
+ * Fix Blue Colors - Override Bootstrap default blue colors with our green theme
+ * Este arquivo corrige cores azuis do Bootstrap que possam estar definidas inline ou em arquivos específicos
+ */
+
+/* Cor azul padrão do Bootstrap (#0d6efd) */
+[style*="color:#0d6efd"],
+[style*="color: #0d6efd"],
+[style*="color: rgb(13, 110, 253)"],
+[style*="color:rgb(13, 110, 253)"],
+[style*="color: #0d6efd"] {
+    color: #1d8031 !important;
+}
+
+[style*="background-color:#0d6efd"],
+[style*="background-color: #0d6efd"],
+[style*="background-color: rgb(13, 110, 253)"],
+[style*="background-color:rgb(13, 110, 253)"],
+[style*="background: #0d6efd"],
+[style*="background:#0d6efd"] {
+    background-color: #1d8031 !important;
+}
+
+[style*="border-color:#0d6efd"],
+[style*="border-color: #0d6efd"],
+[style*="border: 1px solid #0d6efd"],
+[style*="border:1px solid #0d6efd"] {
+    border-color: #1d8031 !important;
+}
+
+/* Outras cores azuis comuns */
+[style*="color:#4154f1"],
+[style*="color: #4154f1"] {
+    color: #1d8031 !important;
+}
+
+[style*="background-color:#4154f1"],
+[style*="background-color: #4154f1"],
+[style*="background: #4154f1"],
+[style*="background:#4154f1"] {
+    background-color: #1d8031 !important;
+}
+
+[style*="border-color:#4154f1"],
+[style*="border-color: #4154f1"],
+[style*="border-bottom: 2px solid #4154f1"] {
+    border-color: #1d8031 !important;
+}
+
+/* Cor azul informacional (#2196F3, #e7f3fe) */
+[style*="color:#2196F3"],
+[style*="color: #2196F3"] {
+    color: #1d8031 !important;
+}
+
+[style*="background-color:#e7f3fe"],
+[style*="background-color: #e7f3fe"] {
+    background-color: #e0f0e3 !important;
+}
+
+[style*="border-left: 5px solid #2196F3"] {
+    border-left: 5px solid #1d8031 !important;
+}
+
+/* Elementos de texto em hover/focus que mudam para azul */
+a:hover,
+button:hover:not(.btn-danger):not(.btn-secondary),
+.nav-link:hover,
+.dropdown-item:hover {
+    color: #1d8031 !important;
+}
+
+/* Sobrescrita de elementos específicos que podem ter estilos inline */
+.form-control:focus, 
+.form-select:focus,
+.form-check-input:checked {
+    border-color: #1d8031 !important;
+    box-shadow: 0 0 0 0.25rem rgba(29, 128, 49, 0.25) !important;
+}
+
+.form-check-input:checked {
+    background-color: #1d8031 !important;
+}
+
+/* Botões com ícones que usam cores azuis padrão */
+.btn i,
+.btn-link,
+a i.bi,
+.nav-link i.bi {
+    color: inherit;
+}
+
+.btn-primary i,
+.badge.bg-primary i {
+    color: white !important;
+}
+
+/* Correção para elementos que possam ter !important definido */
+.btn-primary,
+.bg-primary,
+.badge.bg-primary,
+.btn-outline-primary:hover {
+    background-color: #1d8031 !important;
+    border-color: #1d8031 !important;
+}
+
+/* Outras cores da paleta azul que possam ser usadas */
+.text-info, 
+[style*="color: #17a2b8"], 
+[style*="color:#17a2b8"] {
+    color: #1d8031 !important;
+}
+
+/* Classes específicas do projeto que podem usar azul */
+.form-section-title,
+.upload-info {
+    color: #1d8031 !important;
+    border-color: #1d8031 !important;
+}
+
+/* Corrigir qualquer uso de azul em cards, alertas, etc */
+.card-header.bg-primary, 
+.alert-primary, 
+.modal-header.bg-primary {
+    background-color: #1d8031 !important;
+    border-color: #1d8031 !important;
+}
+
+/*--------------------------------------------------------------
+# Consolidação de CSS - Form Overrides
+--------------------------------------------------------------*/
+/**
+ * Estilos para sobrescrever cores em formulários
+ * Este arquivo corrige cores específicas de elementos de formulário
+ */
+
+/* Ícones de informação - normalmente azuis */
+.bi-info-circle, 
+.bi-question-circle, 
+.bi-exclamation-circle {
+    color: #1d8031 !important;
+}
+
+/* Seções de formulário - cabeçalhos, títulos, bordas */
+.form-section-title,
+.form-header,
+.section-title,
+.form-section h5,
+.form-section h4 {
+    color: #1d8031 !important;
+    border-color: #1d8031 !important;
+}
+
+/* Elementos de formulário quando em foco */
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.form-select:focus {
+    border-color: #1d8031 !important;
+    box-shadow: 0 0 0 0.25rem rgba(29, 128, 49, 0.25) !important;
+}
+
+/* Botões de formulário */
+button[type="submit"],
+input[type="submit"],
+.btn[type="submit"],
+.submit-btn {
+    background-color: #1d8031 !important;
+    border-color: #1d8031 !important;
+    color: white !important;
+}
+
+/* Botões de adicionar/remover */
+.add-btn, 
+.add-button, 
+.add-patrimonio,
+button[class*="add"],
+a[class*="add"] {
+    background-color: #1d8031 !important;
+    border-color: #1d8031 !important;
+    color: white !important;
+}
+
+/* Botões com ícones */
+button i.bi,
+.btn i.bi {
+    color: inherit !important;
+}
+
+/* Grupos de botões e botões dentro de inputs */
+.input-group-text,
+.input-group-append .btn {
+    border-color: #1d8031 !important;
+}
+
+.input-group-text button:hover,
+.input-group-append .btn:hover {
+    background-color: #0f2714 !important;
+    border-color: #0f2714 !important;
+}
+
+/* Correção específica para a página de chamados/patrimônios */
+#main .form-section-title i.bi {
+    color: #1d8031 !important;
+}
+
+.patrimonio-row button {
+    color: white !important;
+}
+
+.btn.add-patrimonio,
+.btn.add-patrimonio i {
+    background-color: #1d8031 !important;
+    border-color: #1d8031 !important;
+    color: white !important;
+}
+
+/* Dicas e elementos informativos */
+[data-bs-toggle="tooltip"]:hover,
+[data-bs-toggle="popover"]:hover,
+.form-text,
+.form-description {
+    color: #1d8031 !important;
+}
+
+/* Validação de formulário */
+.was-validated .form-control:valid, 
+.form-control.is-valid {
+    border-color: #1d8031 !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%231d8031' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") !important;
+}
+
+/* Campos obrigatórios */
+.required-field::after {
+    color: #dc3545 !important;
+}
+
+/* Alertas e notificações */
+.alert-info,
+.alert-primary {
+    background-color: #e0f0e3 !important;
+    border-color: #1d8031 !important;
+    color: #0f2714 !important;
+}
+
+/* Correção para elementos adicionais */
+.card-header,
+.modal-header {
+    border-bottom-color: #1d8031 !important;
+}
+
+/* Correção específica para botões na página de cadastro/chamados */
+.patrimonio-row .btn,
+#patrimoniosContainer .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*--------------------------------------------------------------
+# Consolidação de CSS - Página Visualizar Post
+--------------------------------------------------------------*/
+/* Estilos específicos da página visualizar-post.php */
+.post-image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+.reaction-btn {
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+.reaction-btn:hover, .reaction-btn.active {
+    transform: scale(1.1);
+    background-color: #e9ecef;
+}
+.comment-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #dee2e6;
+}
+.comment {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+}
+.comment-replies {
+    margin-left: 2rem;
+    margin-top: 1rem;
+}
+.reply-form {
+    margin-top: 1rem;
+    display: none;
+}
+.reply-button {
+    font-size: 0.9rem;
+    color: #6c757d;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+.reply-button:hover {
+    color: #1d8031;
+}
+.nested-comment {
+    border-left: 2px solid #dee2e6;
+    margin-left: 2rem;
+    padding-left: 1rem;
+    margin-top: 1rem;
+}
+.links-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+}
+
+/*--------------------------------------------------------------
+# Consolidação de CSS - Página Index
+--------------------------------------------------------------*/
+/* Estilos específicos da página index.php */
+.blog-post {
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+}
+.blog-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.post-image-container {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+    cursor: pointer;
+}
+.post-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.post-image-container:hover .post-image {
+    transform: scale(1.05);
+}
+.post-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.post-image-container:hover .post-overlay {
+    opacity: 1;
+}
+.card-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+.card-title a {
+    color: #1d8031;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.card-title a:hover {
+    color: #0f2714;
+}
+.card-text {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+.post-meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+.post-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.post-stats i {
+    margin-right: 0.3rem;
+}
+.btn-novo-post {
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.btn-novo-post:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(29, 128, 49, 0.2);
+}
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #dee2e6;
+}
+
+/*--------------------------------------------------------------
+# Cores do Tema Principal
+--------------------------------------------------------------*/
+/* Cores principais do tema */
+:root {
+    --bs-primary: #1d8031 !important;
+    --bs-secondary: #0f2714 !important;
+}
+
+/* Botões primários */
+.btn-primary, .badge.bg-primary, a.btn, button.btn, 
+a[class*="btn-primary"], [class*="bg-primary"] {
+    background-color: #1d8031 !important;
+    border-color: #1d8031 !important;
+    color: white !important;
+}
+
+/* Links e estado de hover */
+a, .nav-link.active, .sidebar-nav a:hover, .sidebar-nav a.active {
+    color: #1d8031 !important;
+}
+
+/* Botões específicos que estavam azuis na tela */
+#novo-post, #gerenciar-posts {
+    background-color: #1d8031 !important;
+    border-color: #1d8031 !important;
 }

@@ -104,28 +104,7 @@ include_once '../includes/header.php';
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Gerenciar Reembolsos - Sou + Digital</title>
-    <style>
-        .reembolso-card {
-            transition: transform 0.2s;
-        }
-        .reembolso-card:hover {
-            transform: translateY(-5px);
-        }
-        .arquivo-preview {
-            max-width: 150px;
-            max-height: 150px;
-            object-fit: cover;
-            margin: 5px;
-            border-radius: 5px;
-        }
-        .arquivos-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-    </style>
-</head>
+    </head>
 
 <body>
     <?php include_once '../includes/sidebar.php'; ?>

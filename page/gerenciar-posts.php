@@ -161,43 +161,6 @@ include_once '../includes/sidebar.php';
 ?>
 
 <!-- CSS específico e scripts -->
-<style>
-    .preview-image {
-        max-width: 100%;
-        max-height: 300px;
-        object-fit: cover;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .post-header {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-    .post-preview {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-    }
-    .post-actions {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 8px;
-        margin-top: 20px;
-    }
-    .form-control {
-        border-radius: 6px;
-    }
-    .btn-lg {
-        padding: 12px 24px;
-        font-size: 16px;
-        border-radius: 6px;
-    }
-</style>
-
 <main id="main" class="main">
     <div class="pagetitle">
         <h1>Gerenciar Posts Pendentes</h1>

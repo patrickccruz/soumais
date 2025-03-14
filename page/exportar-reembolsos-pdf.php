@@ -77,12 +77,12 @@ if (!$useTCPDF && !$useMPDF) {
             th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
             th { background-color: #f2f2f2; }
             .header { text-align: center; margin-bottom: 30px; }
-            h1 { color: #333; }
+            h1 { color: #1d8031; }
             .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #777; }
-            .alert { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 4px; }
-            .btn { display: inline-block; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; color: #fff; background-color: #007bff; border: 1px solid #007bff; text-decoration: none; margin-right: 10px; }
-            .btn-primary { background-color: #007bff; }
-            .btn-secondary { background-color: #6c757d; }
+            .alert { background-color: #e0f0e3; border: 1px solid #1d8031; color: #0f2714; padding: 10px; margin-bottom: 20px; border-radius: 4px; }
+            .btn { display: inline-block; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; padding: .375rem .75rem; font-size: 1rem; line-height: 1.5; border-radius: .25rem; color: #fff; background-color: #1d8031; border: 1px solid #1d8031; text-decoration: none; margin-right: 10px; }
+            .btn-primary { background-color: #1d8031; border-color: #1d8031; }
+            .btn-secondary { background-color: #0f2714; border-color: #0f2714; }
             @media print {
                 .no-print { display: none; }
                 body { margin: 0; }

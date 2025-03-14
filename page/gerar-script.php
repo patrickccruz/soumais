@@ -268,10 +268,10 @@ include_once '../includes/header.php';
     }
     
     .form-section-title {
-        color: #4154f1;
+        color: #1d8031;
         margin-bottom: 20px;
         padding-bottom: 10px;
-        border-bottom: 2px solid #4154f1;
+        border-bottom: 2px solid #1d8031;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -301,7 +301,7 @@ include_once '../includes/header.php';
     }
 
     .form-control:focus, .form-select:focus {
-        box-shadow: 0 0 0 0.25rem rgba(65, 84, 241, 0.25);
+        box-shadow: 0 0 0 0.25rem rgba(29, 128, 49, 0.25);
     }
 
     .required-field::after {
@@ -331,11 +331,24 @@ include_once '../includes/header.php';
     
     /* Estilo para o alerta de informações de upload */
     .upload-info {
-        background-color: #e7f3fe;
-        border-left: 5px solid #2196F3;
+        background-color: #e0f0e3;
+        border-left: 5px solid #1d8031;
         padding: 0.5rem 1rem;
         margin-bottom: 1rem;
         font-size: 0.875rem;
+    }
+
+    /* Corrigir cores dos botões */
+    .btn-primary {
+        background-color: #1d8031 !important;
+        border-color: #1d8031 !important;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #0f2714 !important;
+        border-color: #0f2714 !important;
     }
 </style>
 

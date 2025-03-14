@@ -15,7 +15,7 @@
 
 .notification-item.new {
     background-color: #f8f9fa;
-    border-left: 4px solid #0d6efd;
+    border-left: 4px solid #1d8031;
 }
 
 .notification-item.read {
@@ -32,10 +32,10 @@
     margin-right: 15px;
 }
 
-.notification-item .icon.aprovacao { background-color: #198754; color: white; }
+.notification-item .icon.aprovacao { background-color: #1d8031; color: white; }
 .notification-item .icon.rejeicao { background-color: #dc3545; color: white; }
-.notification-item .icon.comentario { background-color: #0dcaf0; color: white; }
-.notification-item .icon.sistema { background-color: #6c757d; color: white; }
+.notification-item .icon.comentario { background-color: #1d8031; color: white; }
+.notification-item .icon.sistema { background-color: #333333; color: white; }
 
 .notification-item .content {
     flex: 1;
@@ -48,13 +48,13 @@
 
 .notification-item .content p {
     font-size: 13px;
-    color: #666;
+    color: #333333;
     margin: 0 0 5px;
 }
 
 .notification-item .content small {
     font-size: 11px;
-    color: #999;
+    color: #555555;
 }
 
 .notification-item .actions {
@@ -67,12 +67,12 @@
     border: none;
     padding: 5px;
     cursor: pointer;
-    color: #666;
+    color: #333333;
     transition: color 0.3s ease;
 }
 
 .notification-item .actions button:hover {
-    color: #0d6efd;
+    color: #1d8031;
 }
 
 /* Toast de notificação */
@@ -143,12 +143,12 @@
 }
 
 .notifications-dropdown::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #555555;
     border-radius: 4px;
 }
 
 .notifications-dropdown::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #333333;
 }
 
 /* Badge de notificação */
@@ -160,7 +160,7 @@
     height: 18px;
     padding: 0 5px;
     border-radius: 9px;
-    background-color: #dc3545;
+    background-color: #1d8031;
     color: white;
     font-size: 11px;
     display: flex;

@@ -57,7 +57,25 @@ $total_nao_lidas = $result->fetch_assoc()['total'];
     <link href="<?php echo isset($is_page) ? '../' : ''; ?>assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="<?php echo isset($is_page) ? '../' : ''; ?>assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="<?php echo isset($is_page) ? '../' : ''; ?>assets/css/style.css" rel="stylesheet">
-    <link href="<?php echo isset($is_page) ? '../' : ''; ?>assets/css/notifications.css" rel="stylesheet">
+    
+    <!-- Garantir que o cache do navegador seja limpo -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- Script para forçar recarregamento do CSS -->
+    <script>
+        // Força o recarregamento do CSS adicionando timestamp como parâmetro
+        document.addEventListener('DOMContentLoaded', function() {
+            var timestamp = new Date().getTime();
+            var styleSheets = document.querySelectorAll('link[rel="stylesheet"]');
+            styleSheets.forEach(function(styleSheet) {
+                styleSheet.href = styleSheet.href + '?t=' + timestamp;
+            });
+        });
+    </script>
+    
+    <!-- Estilos críticos foram movidos para style.css -->
 </head>
 <body>
     <header id="header" class="header fixed-top d-flex align-items-center">

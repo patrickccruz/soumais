@@ -261,47 +261,6 @@ try {
 ?>
 
 <!-- CSS Específico da Página -->
-<style>
-  :focus {
-    border-color: #1bd81b !important;
-    box-shadow: 0 0 5px rgb(7, 228, 25) !important;
-    outline: none !important;
-  }
-  .preview-image {
-    max-width: 200px;
-    max-height: 200px;
-    margin: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
-  #preview-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .file-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
-    max-width: 200px;
-  }
-  .file-preview .file-icon {
-    font-size: 2.5rem;
-    margin-bottom: 8px;
-  }
-  .file-preview .file-name {
-    font-size: 0.8rem;
-    text-align: center;
-    word-break: break-word;
-  }
-  .file-size {
-    font-size: 0.7rem;
-    color: #6c757d;
-  }
-</style>
-
 <main id="main" class="main">
   <section class="section">
     <div class="row">

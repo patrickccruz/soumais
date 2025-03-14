@@ -65,39 +65,6 @@ include_once '../includes/sidebar.php';
 ?>
 
 <!-- CSS Específico da Página -->
-<style>
-  .reembolso-card {
-      transition: transform 0.2s;
-  }
-  .reembolso-card:hover {
-      transform: translateY(-5px);
-  }
-  .status-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-  }
-  .arquivo-preview {
-      max-width: 100px;
-      max-height: 100px;
-      object-fit: cover;
-      margin: 5px;
-      border-radius: 5px;
-  }
-  .arquivos-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-  }
-  .filter-section {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-  }
-</style>
-
 <main id="main" class="main">
   <section class="section">
     <div class="row">

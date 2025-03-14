@@ -30,57 +30,6 @@ if (isset($_SESSION['user']['id'])) {
 ?>
 
 <!-- Estilos específicos da página -->
-<style>
-    .script-card {
-        transition: transform 0.3s ease;
-        cursor: pointer;
-    }
-    .script-card:hover {
-        transform: translateY(-5px);
-    }
-    .filter-section {
-        background: #f6f9ff;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-    .status-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        align-items: flex-end;
-    }
-    .search-box {
-        position: relative;
-        margin-bottom: 20px;
-    }
-    .search-box i {
-        position: absolute;
-        left: 15px;
-        top: 12px;
-        color: #666;
-    }
-    .search-box input {
-        padding-left: 40px;
-    }
-    .card-footer {
-        background: transparent;
-        border-top: 1px solid rgba(0,0,0,.125);
-    }
-    .empty-state {
-        text-align: center;
-        padding: 40px 20px;
-    }
-    .empty-state i {
-        font-size: 48px;
-        color: #ccc;
-        margin-bottom: 15px;
-    }
-</style>
-
 <?php include_once '../includes/header.php'; ?>
 <?php include_once '../includes/sidebar.php'; ?>
 

@@ -399,30 +399,6 @@ include_once '../includes/sidebar.php';
 include_once '../includes/footer.php';
 ?>
 
-<style>
-    .preview-image {
-        max-width: 200px;
-        max-height: 200px;
-        margin: 10px;
-    }
-    #preview-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .current-files {
-        margin-bottom: 20px;
-    }
-    .current-file {
-        display: inline-block;
-        margin: 5px;
-        padding: 5px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Configurar visualização de arquivos
