@@ -9,7 +9,8 @@ O Sistema Sou + Digital é uma plataforma web desenvolvida para gerenciamento de
 - JavaScript/jQuery
 - HTML5/CSS3
 - Bootstrap 4
-- PHPSpreadsheet (para geração de relatórios)
+- PHPSpreadsheet (para geração de relatórios em Excel)
+- TCPDF (para geração de PDFs)
 - PHPMailer (para envio de emails)
 
 ## Estrutura de Diretórios
@@ -19,6 +20,8 @@ O sistema está organizado na seguinte estrutura:
 ```
 /var/www/html/soudigital/
 ├── ajax/               # Endpoints para requisições AJAX
+│   ├── check_notifications.php
+│   └── mark_notification_read.php
 ├── api/                # APIs para integração com outros sistemas
 ├── assets/             # Recursos estáticos (CSS, JS, imagens)
 │   ├── css/
@@ -27,30 +30,39 @@ O sistema está organizado na seguinte estrutura:
 │   └── vendors/        # Bibliotecas de terceiros
 ├── backups/            # Diretório para armazenar backups
 ├── db/                 # Scripts e arquivos de banco de dados
+│   ├── database.sql    # Estrutura principal do banco
+│   └── make_admin.sql  # Script para promover usuário a administrador
 ├── includes/           # Arquivos PHP reutilizáveis
-│   ├── header.php
-│   ├── footer.php
-│   ├── sidebar.php
-│   └── ... (outros includes)
+│   ├── header.php      # Header compartilhado entre páginas
+│   ├── footer.php      # Footer compartilhado entre páginas
+│   ├── sidebar.php     # Menu lateral da aplicação
+│   ├── functions.php   # Funções utilitárias
+│   ├── upload_functions.php # Funções de gerenciamento de uploads
+│   ├── db.php          # Link simbólico para o arquivo de conexão
+│   └── send_notification.php # Sistema de notificações
 ├── logs/               # Logs do sistema
 ├── page/               # Páginas principais do sistema
 │   ├── admin/          # Área administrativa
-│   ├── chamados/       # Gestão de chamados
+│   ├── chamados/       # Gestão de chamados/relatórios
 │   ├── reembolsos/     # Sistema de reembolsos
 │   └── ... (outras páginas)
 ├── scripts/            # Scripts auxiliares
+│   └── migrate_uploads.php # Migração de arquivos de upload
 ├── uploads/            # Armazenamento de arquivos enviados
 │   ├── chamados/
 │   ├── reembolsos/
-│   ├── usuarios/
-│   └── temp/
+│   ├── usuarios/       # Fotos de perfil e documentos
+│   └── temp/           # Armazenamento temporário
 ├── vendor/             # Dependências do Composer
 ├── .env                # Variáveis de ambiente
 ├── .htaccess           # Configurações do Apache
 ├── check_db_connections.php # Script para verificar conexões de banco
 ├── composer.json       # Configuração de dependências
 ├── db.php              # Arquivo central de conexão com o banco
+├── login.php           # Página de login
+├── processar-upload.php # Processamento de uploads
 ├── index.php           # Página inicial
+├── github-webhook.php  # Webhook para integração com GitHub
 └── README.md           # Instruções básicas
 ```
 
@@ -58,13 +70,31 @@ O sistema está organizado na seguinte estrutura:
 
 ### Estrutura de Conexão
 
-O sistema utiliza um arquivo centralizado `db.php` na raiz do projeto para todas as conexões de banco de dados. Este arquivo é responsável por:
+O sistema utiliza um arquivo centralizado `db.php` na raiz do projeto para todas as conexões de banco de dados. Esta abordagem oferece:
 
-1. Estabelecer a conexão com o banco de dados
-2. Configurar o conjunto de caracteres
-3. Gerenciar erros de conexão
+1. Centralização das credenciais do banco de dados
+2. Configuração consistente do conjunto de caracteres (UTF-8)
+3. Fallback automático para ambiente de desenvolvimento
+4. Gerenciamento de erros padronizado
 
-**Importante**: O arquivo `db.php` está na raiz, mas é acessado por outros arquivos em diferentes diretórios através de um link simbólico em `/includes/db.php`. Isso permite que arquivos nas pastas `page/` e outras possam incluir o arquivo de banco de dados usando:
+**Atualização 2023**: O arquivo db.php agora inclui um mecanismo de fallback que, em caso de falha na conexão principal, tenta uma conexão alternativa com as credenciais de desenvolvimento. Este comportamento só é recomendado para ambientes de desenvolvimento.
+
+```php
+try {
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Verificar conexão...
+} catch (Exception $e) {
+    // Se falhar, tentar conexão alternativa (apenas para desenvolvimento)
+    try {
+        $conn = new mysqli($servername, "root", "", $dbname);
+        // Configurações adicionais...
+    } catch (Exception $e2) {
+        die("Erro crítico de conexão com banco de dados: " . $e2->getMessage());
+    }
+}
+```
+
+**Importante**: O arquivo `db.php` está na raiz, mas também é acessado através de um link simbólico em `/includes/db.php`:
 
 ```php
 require_once '../includes/db.php';  // Para arquivos na pasta page/
@@ -84,7 +114,7 @@ ln -s /var/www/html/soudigital/db.php /var/www/html/soudigital/includes/db.php
 
 ### Melhores Práticas para Conexão DB
 
-- **Nunca use conexões diretas** como `new mysqli('localhost', 'root', '', 'sou_digital')` em arquivos individuais
+- **Nunca use conexões diretas** em arquivos individuais
 - Sempre use o arquivo centralizado através de `require_once '../includes/db.php'`
 - Utilize prepared statements para todas as consultas SQL
 - Feche a conexão após o uso com `$conn->close()` quando apropriado
@@ -93,12 +123,12 @@ ln -s /var/www/html/soudigital/db.php /var/www/html/soudigital/includes/db.php
 
 | Tabela | Descrição | Principais Campos |
 |--------|-----------|-------------------|
-| usuarios | Armazena informações dos usuários | id, nome, email, senha, nivel, status |
-| chamados | Registro de chamados técnicos | id, usuario_id, titulo, descricao, status, data_criacao |
-| reembolsos | Solicitações de reembolso | id, usuario_id, valor, descricao, comprovante, status |
-| servicos | Catálogo de serviços oferecidos | id, nome, descricao, valor, status |
-| blog_posts | Artigos do blog | id, titulo, conteudo, autor_id, data_publicacao, status |
-| logs | Registro de atividades do sistema | id, usuario_id, acao, detalhes, ip, data |
+| users | Armazena informações dos usuários | id, name, email, username, password, profile_image, is_admin |
+| reports | Registros de chamados técnicos | id, user_id, data_chamado, numero_chamado, tipo_chamado, cliente, status_chamado |
+| reembolsos | Solicitações de reembolso | id, user_id, data_chamado, valor, tipo_reembolso, status, arquivo_path |
+| blog_posts | Artigos do blog | id, user_id, titulo, conteudo, imagem_capa, status, data_criacao |
+| blog_comentarios | Comentários nos posts | id, post_id, user_id, comentario, data_criacao |
+| notificacoes | Sistema de notificações | id, user_id, tipo, titulo, mensagem, link, lida, data_criacao |
 
 ## Módulos do Sistema
 
@@ -106,78 +136,93 @@ ln -s /var/www/html/soudigital/db.php /var/www/html/soudigital/includes/db.php
 
 O sistema utiliza autenticação baseada em sessões PHP. Os principais arquivos são:
 
-- `autenticacao.php`: Formulário de login
-- `processar_login.php`: Validação de credenciais
-- `logout.php`: Encerramento de sessão
+- `login.php`: Formulário de login
+- `page/processar-login.php`: Validação de credenciais
+- `page/sair.php`: Encerramento de sessão
+- `page/cadastro.php` e `page/processar-cadastro.php`: Registro de novos usuários
 
-A autenticação verifica o nível de acesso do usuário para determinar quais funcionalidades estarão disponíveis. Os níveis são:
+**Atualização 2023**: O sistema de autenticação agora inclui medidas adicionais de segurança:
+- Bloqueio temporário após tentativas falhas de login
+- Verificação de força de senha
+- Tokens de sessão contra ataques CSRF
 
-- **1**: Administrador (acesso total)
-- **2**: Gerente (acesso parcial à área administrativa)
-- **3**: Técnico (acesso às funcionalidades operacionais)
-- **4**: Cliente (acesso limitado às suas próprias informações)
+A autenticação verifica se o usuário é administrador através do campo `is_admin` na tabela `users`.
 
-### 2. Sistema de Gestão de Chamados
+### 2. Sistema de Gestão de Chamados e Relatórios
 
-O módulo de chamados permite:
+O módulo de chamados (reports) permite:
 
-- Abertura de novos chamados
-- Atribuição a técnicos
-- Acompanhamento do status
-- Anexo de arquivos
-- Comunicação entre cliente e técnico
+- Registro de chamados de implantação e sustentação
+- Controle de quilometragem
+- Registro de horários de atendimento
+- Upload de comprovantes
 - Geração de relatórios
 
 Principais arquivos:
-- `page/meus-chamados.php`: Visualização de chamados do usuário
-- `page/novo-chamado.php`: Criação de chamados
-- `page/detalhes-chamado.php`: Detalhes completos do chamado
-- `ajax/atualizar_status_chamado.php`: Endpoint para atualização de status
+- `page/meus-scripts.php`: Visualização de chamados do usuário
+- `page/gerar-script.php`: Criação de novos chamados/relatórios
+- `page/visualizar-relatorios.php`: Relatórios gerenciais
+- `page/exportar-relatorios.php`: Exportação para Excel/PDF
 
 ### 3. Sistema de Reembolsos
 
 Gerencia solicitações de reembolso com:
 
-- Cadastro de solicitações
+- Cadastro de solicitações por tipo (estacionamento, pedágio, alimentação, etc.)
 - Upload de comprovantes
-- Workflow de aprovação
+- Workflow de aprovação (pendente, aprovado, criticado, reprovado)
 - Geração de relatórios financeiros
+- Exportação em Excel e PDF
 
 Principais arquivos:
 - `page/meus-reembolsos.php`: Visualização de reembolsos do usuário
-- `page/novo-reembolso.php`: Criação de solicitações
-- `page/aprovar-reembolsos.php`: Interface de aprovação (admins/gerentes)
-- `ajax/processar_reembolso.php`: Processamento de solicitações
+- `page/solicitar-reembolso.php`: Criação de solicitações
+- `page/todos-reembolsos.php`: Interface de gerenciamento (admins)
+- `page/exportar-reembolsos-excel.php` e `page/exportar-reembolsos-pdf.php`: Exportação
 
 ### 4. Sistema de Blog
 
 Permite a publicação de artigos e notícias com:
 
 - Editor de texto avançado
-- Gerenciamento de categorias
-- Comentários
-- Controle de publicação
+- Upload de imagens
+- Sistema de aprovação de conteúdo
+- Comentários e reações
 
 Principais arquivos:
-- `page/blog.php`: Listagem de artigos
-- `page/artigo.php`: Visualização de artigo individual
-- `page/admin/gerenciar-blog.php`: Administração de artigos
-- `ajax/salvar_post.php`: Endpoint para salvar artigos
+- `page/gerenciar-posts.php`: Listagem de artigos
+- `page/visualizar-post.php`: Visualização de artigo individual
+- `page/criar-post.php`: Criação de novos posts
+- `page/deletar-post.php`: Remoção de posts
 
-### 5. Área Administrativa
+### 5. Sistema de Notificações
 
-Fornece ferramentas para gestão do sistema:
+**Novidade 2023**: Sistema de notificações em tempo real para:
+- Aprovação ou rejeição de reembolsos
+- Comentários em posts
+- Mensagens do sistema
 
-- Gerenciamento de usuários
-- Relatórios gerenciais
-- Configurações do sistema
-- Monitoramento de atividades
+Implementado com:
+- Tabela `notificacoes` no banco de dados
+- AJAX para verificação periódica (`ajax/check_notifications.php`)
+- Marcação de leitura (`ajax/mark_notification_read.php`)
+- Interface unificada (`page/notificacoes.php`)
+
+### 6. Gerenciamento de Usuários
+
+Controle completo dos usuários do sistema:
+
+- Criação de novos usuários
+- Edição de perfis
+- Alteração de senhas
+- Upload de fotos de perfil
 
 Principais arquivos:
-- `page/admin/dashboard.php`: Painel principal
-- `page/admin/usuarios.php`: Gerenciamento de usuários
-- `page/admin/relatorios.php`: Geração de relatórios
-- `page/admin/configuracoes.php`: Configurações do sistema
+- `page/gerenciar-usuarios.php`: Interface de administração
+- `page/criar-usuario.php`: Criação de usuários
+- `page/editar-usuario.php`: Edição de perfis
+- `page/meu-perfil.php`: Perfil do usuário logado
+- `page/atualizar-foto-perfil.php`: Upload de foto de perfil
 
 ## Sistema de Upload de Arquivos
 
@@ -192,26 +237,29 @@ Os uploads são organizados em subdiretórios por tipo:
 
 ### Funções de Upload
 
-O arquivo `upload_functions.php` contém funções reutilizáveis para:
+O arquivo `includes/upload_functions.php` contém funções avançadas para:
 
-- Validação de tipos de arquivo
+- Validação segura de tipos de arquivo
 - Verificação de tamanho
-- Renomeação segura
-- Movimentação para o diretório correto
+- Geração de nomes únicos
+- Movimentação segura de arquivos
+- Tratamento de erros
+- Registro de logs
+
+**Atualização 2023**: O sistema agora suporta uploads maiores através do arquivo `processar-upload-grande.php`, que implementa upload em chunks para arquivos de grande porte.
 
 Exemplo de uso:
 ```php
 include_once '../includes/upload_functions.php';
 
 // Upload de arquivo
-$result = upload_file($_FILES['arquivo'], 'reembolsos', [
-    'allowed_types' => ['jpg', 'jpeg', 'png', 'pdf'],
-    'max_size' => 5242880, // 5MB
-    'new_filename' => 'reembolso_' . $reembolso_id
-]);
+$result = process_file_upload($_FILES['arquivo'], 'reembolsos', [
+    'jpg', 'jpeg', 'png', 'pdf'
+], 5242880, // 5MB
+'reembolso_' . $reembolso_id);
 
 if($result['success']) {
-    $arquivo_path = $result['path'];
+    $arquivo_path = $result['file_path'];
     // Salvar caminho no banco de dados
 } else {
     $erro = $result['error'];
@@ -232,12 +280,11 @@ if($result['success']) {
 
 1. Clone o repositório para o diretório do servidor web
 2. Instale as dependências com Composer
-3. Configure as variáveis de ambiente no arquivo `.env`
-4. Importe a estrutura do banco de dados de `db/estrutura.sql`
-5. Configure o VirtualHost do Apache para o projeto
-6. Crie o link simbólico do arquivo db.php
-7. Configure permissões de diretórios
-8. Acesse o sistema pelo navegador
+3. Importe a estrutura do banco de dados de `db/database.sql`
+4. Configure o VirtualHost do Apache para o projeto
+5. Crie o link simbólico do arquivo db.php
+6. Configure permissões de diretórios
+7. Acesse o sistema pelo navegador
 
 Para instruções detalhadas, consulte o arquivo [README.md](README.md).
 
@@ -252,16 +299,12 @@ Para instruções detalhadas, consulte o arquivo [README.md](README.md).
 **Solução**:
 1. Verifique se existe o link simbólico em `/includes/db.php`
 2. Remova conexões diretas ao banco de dados nos arquivos
-3. Use o script `check_db_connections.php` para localizar conexões diretas
-4. Verifique as credenciais no arquivo db.php
-5. Reinicie o Apache após as alterações
+3. Verifique as credenciais no arquivo db.php
+4. Reinicie o Apache após as alterações
 
 ```bash
 # Verifique o link simbólico
 ls -la /var/www/html/soudigital/includes/db.php
-
-# Execute o verificador de conexões
-php /var/www/html/soudigital/check_db_connections.php
 
 # Reinicie o Apache
 systemctl restart apache2
@@ -301,13 +344,13 @@ systemctl restart apache2
    ```bash
    chmod -R 775 /var/www/html/soudigital/uploads/
    ```
-3. Verifique as configurações do PHP para uploads no `php.ini`:
+3. Verifique as configurações do PHP para uploads no `php.ini` ou no arquivo local `.user.ini`:
    ```
    upload_max_filesize = 10M
    post_max_size = 10M
    max_execution_time = 30
    ```
-4. Reinicie o Apache após alterações no php.ini
+4. Para arquivos grandes, use o formulário alternativo em `page/formulario-alternativo.php` que utiliza upload em chunks
 
 ## Segurança
 
@@ -321,13 +364,13 @@ O sistema implementa:
 Exemplo de uso correto:
 ```php
 // CORRETO: Uso de prepared statements
-$stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+$stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 // INCORRETO: Vulnerável a SQL Injection
-$query = "SELECT * FROM usuarios WHERE email = '$email'"; // NÃO FAÇA ISSO
+$query = "SELECT * FROM users WHERE email = '$email'"; // NÃO FAÇA ISSO
 ```
 
 ### Proteção contra XSS
@@ -362,30 +405,22 @@ Formulários são protegidos com tokens CSRF:
 
 ### Procedimento de Backup
 
-O sistema inclui scripts automáticos para backup:
+Recomendações para backup regular:
 
 1. **Backup do Banco de Dados**:
-   ```php
-   // Em scripts/backup_database.php
-   php /var/www/html/soudigital/scripts/backup_database.php
-   ```
+   ```bash
+   # Substitua usuário/senha pelos valores corretos
+   mysqldump -u sou_digital -p sou_digital > /var/www/html/soudigital/backups/db/backup_$(date +%Y%m%d).sql
    
-   Este script realiza:
-   - Dump completo do banco de dados
-   - Compressão do arquivo
-   - Armazenamento no diretório `/backups/db/`
-   - Rotação de backups (mantém os últimos 7 diários)
+   # Compressão do arquivo
+   gzip /var/www/html/soudigital/backups/db/backup_$(date +%Y%m%d).sql
+   ```
 
 2. **Backup de Arquivos**:
-   ```php
-   // Em scripts/backup_files.php
-   php /var/www/html/soudigital/scripts/backup_files.php
+   ```bash
+   # Compressão do diretório de uploads
+   tar -czvf /var/www/html/soudigital/backups/files/uploads_$(date +%Y%m%d).tar.gz /var/www/html/soudigital/uploads/
    ```
-   
-   Este script realiza:
-   - Compressão do diretório de uploads
-   - Armazenamento no diretório `/backups/files/`
-   - Rotação de backups (mantém os últimos 7 diários)
 
 ### Monitoramento de Logs
 
@@ -394,22 +429,12 @@ Os logs do sistema são armazenados em:
 - **Logs de Erro do PHP/Apache**: `/var/log/apache2/soudigital_error.log`
 - **Logs de Acesso**: `/var/log/apache2/soudigital_access.log`
 - **Logs Internos do Sistema**: `/var/www/html/soudigital/logs/system.log`
+- **Logs de Upload**: `/var/www/html/soudigital/logs/uploads.log`
 
 Para monitorar erros em tempo real:
 ```bash
 tail -f /var/log/apache2/soudigital_error.log
 ```
-
-### Manutenção Preventiva
-
-Tarefas recomendadas de manutenção:
-
-- **Diária**: Verificação de logs de erro
-- **Semanal**: Backup completo (banco de dados e arquivos)
-- **Mensal**: 
-  - Limpeza de arquivos temporários
-  - Verificação de integridade do banco de dados
-  - Atualização de dependências
 
 ## Diretrizes de Desenvolvimento
 
@@ -418,8 +443,7 @@ Tarefas recomendadas de manutenção:
 O sistema segue estas convenções:
 
 - **Nomenclatura**:
-  - Arquivos: minúsculas com underscores (ex: `meus_chamados.php`)
-  - Classes: CamelCase (ex: `UploadManager`)
+  - Arquivos: minúsculas com hífens (ex: `meus-reembolsos.php`)
   - Funções: snake_case (ex: `process_login()`)
   - Variáveis: camelCase (ex: `$userData`)
 
@@ -442,6 +466,8 @@ O sistema segue estas convenções:
    - Execute scripts de migração do banco de dados
    - Teste após a implantação
 
+**Novidade 2023**: O sistema agora inclui um webhook do GitHub (`github-webhook.php`) que permite atualizações automáticas do código quando novas alterações são enviadas ao repositório.
+
 ### Desenvolvimento de Novas Funcionalidades
 
 Para adicionar novas funcionalidades:
@@ -455,20 +481,20 @@ Para adicionar novas funcionalidades:
 
 ## Agendamento de Tarefas (Cron Jobs)
 
-O sistema utiliza cron jobs para tarefas agendadas:
+Recomendações para tarefas agendadas:
 
 ```
 # Backup diário do banco às 2h da manhã
-0 2 * * * php /var/www/html/soudigital/scripts/backup_database.php >> /var/www/html/soudigital/logs/backup.log 2>&1
+0 2 * * * mysqldump -u sou_digital -p'SuaSenhaSegura123!' sou_digital | gzip > /var/www/html/soudigital/backups/db/backup_$(date +\%Y\%m\%d).sql.gz
 
 # Backup semanal de arquivos aos domingos às 3h da manhã
-0 3 * * 0 php /var/www/html/soudigital/scripts/backup_files.php >> /var/www/html/soudigital/logs/backup.log 2>&1
+0 3 * * 0 tar -czvf /var/www/html/soudigital/backups/files/uploads_$(date +\%Y\%m\%d).tar.gz -C /var/www/html/soudigital uploads/
 
 # Limpeza de arquivos temporários a cada 6 horas
-0 */6 * * * php /var/www/html/soudigital/scripts/clean_temp_files.php >> /var/www/html/soudigital/logs/cleanup.log 2>&1
+0 */6 * * * find /var/www/html/soudigital/uploads/temp -type f -mtime +1 -delete
 
 # Envio de notificações a cada hora
-0 * * * * php /var/www/html/soudigital/scripts/send_notifications.php >> /var/www/html/soudigital/logs/notifications.log 2>&1
+0 * * * * php /var/www/html/soudigital/includes/send_notification.php
 ```
 
 Para configurar estes jobs:
@@ -487,4 +513,4 @@ Para suporte técnico ou dúvidas sobre o sistema, entre em contato:
 
 ---
 
-Documentação atualizada em: Fevereiro de 2025 
+Documentação atualizada em: Junho de 2023 

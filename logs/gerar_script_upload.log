@@ -1,0 +1,28 @@
+
+[2025-03-13 13:50:34] ==== PROCESSANDO FORM GERAR-SCRIPT ====
+[2025-03-13 13:50:34] Configurações PHP: upload_max_filesize=20M, post_max_size=22M
+[2025-03-13 13:50:34] Report ID criado: 10
+[2025-03-13 13:50:34] Arquivo recebido: RAT.pdf
+[2025-03-13 13:50:34] Tamanho: 2220784 bytes
+[2025-03-13 13:50:34] Tipo: application/pdf
+[2025-03-13 13:50:34] MIME detectado: application/pdf
+[2025-03-13 13:50:34] Nome de arquivo gerado: rat_10_1741873835_RAT.pdf
+[2025-03-13 13:50:34] Diretório do relatório criado: /var/www/html/soudigital/uploads/reports/10
+[2025-03-13 13:50:34] Destino final: /var/www/html/soudigital/uploads/reports/10/rat_10_1741873835_RAT.pdf
+[2025-03-13 13:50:34] Arquivo movido com sucesso (move_uploaded_file)
+[2025-03-13 13:50:34] Caminho para banco de dados: uploads/reports/10/rat_10_1741873835_RAT.pdf
+[2025-03-13 13:50:34] Banco de dados atualizado com sucesso
+
+[2025-03-13 14:09:43] ==== PROCESSANDO FORM GERAR-SCRIPT ====
+[2025-03-13 14:09:43] Configurações PHP: upload_max_filesize=20M, post_max_size=22M
+[2025-03-13 14:09:43] Report ID criado: 11
+[2025-03-13 14:09:43] Arquivo recebido: RAT 429353.pdf
+[2025-03-13 14:09:43] Tamanho: 2228824 bytes
+[2025-03-13 14:09:43] Tipo: application/pdf
+[2025-03-13 14:09:43] MIME detectado: application/pdf
+[2025-03-13 14:09:43] Nome de arquivo gerado: rat_11_1741874983_RAT_429353.pdf
+[2025-03-13 14:09:43] Diretório do relatório criado: /var/www/html/soudigital/uploads/reports/11
+[2025-03-13 14:09:43] Destino final: /var/www/html/soudigital/uploads/reports/11/rat_11_1741874983_RAT_429353.pdf
+[2025-03-13 14:09:43] Arquivo movido com sucesso (move_uploaded_file)
+[2025-03-13 14:09:43] Caminho para banco de dados: uploads/reports/11/rat_11_1741874983_RAT_429353.pdf
+[2025-03-13 14:09:43] Banco de dados atualizado com sucesso

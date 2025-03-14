@@ -111,3 +111,7 @@
 [13-Mar-2025 13:26:56 UTC] [2025-03-13 13:26:56] === FIM DO PROCESSAMENTO DE ARQUIVOS REEMBOLSO ===
 [13-Mar-2025 13:26:57 UTC] [2025-03-13 13:26:56] Processo de reembolso completado com sucesso
 [13-Mar-2025 13:26:57 UTC] [2025-03-13 13:26:56] Conexões e recursos limpos
+[13-Mar-2025 13:50:53 UTC] [2025-03-13 13:50:53] Iniciando execução da página solicitar-reembolso.php
+[13-Mar-2025 13:50:53 UTC] [2025-03-13 13:50:53] ERRO: Função process_file_upload não encontrada
+[14-Mar-2025 11:43:38 UTC] [2025-03-14 11:43:38] Iniciando execução da página solicitar-reembolso.php
+[14-Mar-2025 11:43:38 UTC] [2025-03-14 11:43:38] ERRO: Função process_file_upload não encontrada

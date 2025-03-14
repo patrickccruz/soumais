@@ -384,13 +384,103 @@ include_once '../includes/sidebar.php';
       // Exportação
       document.getElementById('exportExcel').addEventListener('click', function(e) {
         e.preventDefault();
-        alert('Funcionalidade de exportação para Excel será implementada em breve!');
+        // Obter todos os parâmetros de filtro atuais
+        const searchTerm = document.getElementById('searchInput').value.trim();
+        const statusTerm = document.getElementById('statusFilter').value;
+        const tipoTerm = document.getElementById('tipoFilter').value;
+        const monthTerm = document.getElementById('monthFilter').value;
+        
+        // Mostrar feedback visual
+        const btnText = this.innerHTML;
+        this.innerHTML = '<i class="bi bi-hourglass-split"></i> Gerando Excel...';
+        this.disabled = true;
+        
+        // Construir URL com parâmetros de query
+        let exportUrl = 'exportar-reembolsos-excel.php?';
+        const params = [];
+        
+        if (searchTerm) params.push('search=' + encodeURIComponent(searchTerm));
+        if (statusTerm) params.push('status=' + encodeURIComponent(statusTerm));
+        if (tipoTerm) params.push('tipo=' + encodeURIComponent(tipoTerm));
+        if (monthTerm) params.push('month=' + encodeURIComponent(monthTerm));
+        
+        exportUrl += params.join('&');
+        
+        // Restaurar botão após download começar
+        setTimeout(() => {
+          this.innerHTML = btnText;
+          this.disabled = false;
+        }, 1500);
+        
+        // Abrir em nova janela para não interromper a página atual
+        window.open(exportUrl, '_blank');
       });
 
       document.getElementById('exportPDF').addEventListener('click', function(e) {
         e.preventDefault();
-        alert('Funcionalidade de exportação para PDF será implementada em breve!');
+        // Obter todos os parâmetros de filtro atuais
+        const searchTerm = document.getElementById('searchInput').value.trim();
+        const statusTerm = document.getElementById('statusFilter').value;
+        const tipoTerm = document.getElementById('tipoFilter').value;
+        const monthTerm = document.getElementById('monthFilter').value;
+        
+        // Mostrar feedback visual
+        const btnText = this.innerHTML;
+        this.innerHTML = '<i class="bi bi-hourglass-split"></i> Gerando PDF...';
+        this.disabled = true;
+        
+        // Construir URL com parâmetros de query
+        let exportUrl = 'exportar-reembolsos-pdf.php?';
+        const params = [];
+        
+        if (searchTerm) params.push('search=' + encodeURIComponent(searchTerm));
+        if (statusTerm) params.push('status=' + encodeURIComponent(statusTerm));
+        if (tipoTerm) params.push('tipo=' + encodeURIComponent(tipoTerm));
+        if (monthTerm) params.push('month=' + encodeURIComponent(monthTerm));
+        
+        exportUrl += params.join('&');
+        
+        // Restaurar botão após download começar
+        setTimeout(() => {
+          this.innerHTML = btnText;
+          this.disabled = false;
+        }, 1500);
+        
+        // Abrir em nova janela para não interromper a página atual
+        window.open(exportUrl, '_blank');
       });
+
+      // Adicionar tooltip explicativo ao botão de PDF
+      const pdfButton = document.getElementById('exportPDF');
+      if (pdfButton) {
+        pdfButton.setAttribute('title', 'Exporta em PDF. Se não houver biblioteca instalada, abre versão para impressão que pode ser salva como PDF.');
+        
+        // Adicionar evento hover para tooltip mais visível em dispositivos móveis
+        const tooltip = document.createElement('div');
+        tooltip.style.display = 'none';
+        tooltip.style.position = 'absolute';
+        tooltip.style.backgroundColor = '#333';
+        tooltip.style.color = '#fff';
+        tooltip.style.padding = '5px 10px';
+        tooltip.style.borderRadius = '4px';
+        tooltip.style.zIndex = '999';
+        tooltip.style.width = '220px';
+        tooltip.style.fontSize = '12px';
+        tooltip.style.textAlign = 'center';
+        tooltip.innerText = 'Exporta em PDF. Se não houver biblioteca instalada, abre versão para impressão que pode ser salva como PDF.';
+        document.body.appendChild(tooltip);
+        
+        pdfButton.addEventListener('mouseover', function(e) {
+          const rect = this.getBoundingClientRect();
+          tooltip.style.left = (rect.left + window.scrollX) + 'px';
+          tooltip.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+          tooltip.style.display = 'block';
+        });
+        
+        pdfButton.addEventListener('mouseout', function() {
+          tooltip.style.display = 'none';
+        });
+      }
     });
   </script>
 </body>

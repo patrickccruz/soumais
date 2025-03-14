@@ -8,12 +8,14 @@ O Sistema Sou + Digital é uma plataforma web completa desenvolvida para otimiza
 
 ### Principais Funcionalidades
 
-- Gestão de chamados técnicos
-- Sistema de reembolsos
-- Blog corporativo
+- Gestão de chamados técnicos e relatórios
+- Sistema completo de reembolsos com workflow de aprovação
+- Blog corporativo com publicação de artigos
+- Sistema de notificações em tempo real
 - Gerenciamento de usuários
-- Relatórios e análises
-- Backup automático
+- Exportação de relatórios em Excel e PDF
+- Suporte para upload de arquivos de grande porte
+- Integração com GitHub para atualizações automáticas
 
 ## Pré-requisitos
 
@@ -50,44 +52,20 @@ Siga estes passos para configurar o ambiente de desenvolvimento:
    composer install
    ```
    
-   Este comando irá instalar as seguintes dependências:
-   - phpoffice/phpspreadsheet (^1.29)
-   - vlucas/phpdotenv (^5.6)
+   Este comando irá instalar as dependências definidas no composer.json.
 
-3. **Configure o Ambiente**
-   ```bash
-   # Copie o arquivo de exemplo de variáveis de ambiente
-   cp .env.example .env
-   
-   # Edite o arquivo .env com suas configurações
-   nano .env
-   ```
-
-   Configure as seguintes variáveis no arquivo .env:
-   ```env
-   DB_HOST=localhost
-   DB_USER=seu_usuario
-   DB_PASS=sua_senha
-   DB_NAME=nome_do_banco
-   
-   SMTP_HOST=seu_servidor_smtp
-   SMTP_USER=seu_email
-   SMTP_PASS=senha_email
-   SMTP_PORT=587
-   ```
-
-4. **Configure o Banco de Dados**
+3. **Configure o Banco de Dados**
    - Inicie o MySQL/MariaDB
    - Crie um novo banco de dados
    ```sql
-   CREATE DATABASE nome_do_banco;
+   CREATE DATABASE sou_digital;
    ```
    - Importe o arquivo de estrutura do banco
    ```bash
-   mysql -u seu_usuario -p nome_do_banco < db/estrutura.sql
+   mysql -u seu_usuario -p sou_digital < db/database.sql
    ```
 
-5. **Configure o Servidor Web**
+4. **Configure o Servidor Web**
    - Certifique-se de que o Apache está instalado e rodando
    - Crie um VirtualHost para o projeto:
    ```apache
@@ -109,14 +87,31 @@ Siga estes passos para configurar o ambiente de desenvolvimento:
    ```
    - **IMPORTANTE**: Sempre inclua o IP do servidor no `ServerAlias` para garantir acesso correto
 
-6. **Configure a Conexão com o Banco de Dados**
-   - Verifique se o arquivo `db.php` está na raiz do projeto
+5. **Configure a Conexão com o Banco de Dados**
+   - Verifique se o arquivo `db.php` está configurado com as credenciais corretas:
+   ```php
+   $servername = "localhost";
+   $username = "sou_digital";
+   $password = "SuaSenhaSegura123!";
+   $dbname = "sou_digital";
+   ```
    - Crie o diretório includes e um link simbólico para o arquivo db.php:
    ```bash
    mkdir -p /var/www/html/soudigital/includes
    ln -s /var/www/html/soudigital/db.php /var/www/html/soudigital/includes/db.php
    ```
-   - Isso garante que os arquivos no diretório `page/` consigam acessar a conexão do banco de dados
+
+6. **Crie Diretórios de Upload**
+   - Crie os diretórios necessários para armazenar os uploads:
+   ```bash
+   mkdir -p /var/www/html/soudigital/uploads/chamados
+   mkdir -p /var/www/html/soudigital/uploads/reembolsos
+   mkdir -p /var/www/html/soudigital/uploads/usuarios
+   mkdir -p /var/www/html/soudigital/uploads/temp
+   mkdir -p /var/www/html/soudigital/logs
+   mkdir -p /var/www/html/soudigital/backups/db
+   mkdir -p /var/www/html/soudigital/backups/files
+   ```
 
 ## Permissões de Diretórios
 
@@ -134,84 +129,34 @@ chmod -R 775 logs/
 chmod -R 775 backups/
 ```
 
-## Configuração do Apache
+## Configuração do PHP
 
-Adicione ou modifique o arquivo .htaccess na raiz do projeto:
+Para trabalhar com uploads de arquivos grandes, ajuste os limites no arquivo `.user.ini` na raiz do projeto ou em um diretório específico:
 
-```apache
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /soudigital/
-    
-    # Redirecionar para HTTPS (se configurado)
-    # RewriteCond %{HTTPS} off
-    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    
-    # Proteger arquivos sensíveis
-    RewriteRule ^(.env|composer.json|composer.lock)$ - [F,L]
-</IfModule>
-
-# Configurações de segurança
-<IfModule mod_headers.c>
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "DENY"
-    Header set X-XSS-Protection "1; mode=block"
-</IfModule>
+```ini
+upload_max_filesize = 40M
+post_max_size = 42M
+memory_limit = 256M
+max_execution_time = 300
+max_input_time = 300
 ```
 
-## Configuração do Ngrok
+Isso permite o upload de arquivos de até 40MB. Para arquivos maiores, o sistema implementa um mecanismo de upload em chunks através do `processar-upload-grande.php`.
 
-O [Ngrok](https://ngrok.com/) é uma ferramenta que permite expor serviços web locais na internet de forma segura, sem precisar configurar portas, IPs, DNS ou firewall.
+## Configuração do GitHub Webhook
 
-### Instalação
+O sistema inclui suporte para atualização automática por meio de um webhook do GitHub:
 
-Instale o agente do Ngrok usando um gerenciador de pacotes:
+1. Acesse as configurações do seu repositório no GitHub
+2. Navegue até "Webhooks" > "Add webhook"
+3. Insira a URL: `https://seudominio.com/github-webhook.php`
+4. Selecione "Content type" como `application/json`
+5. Defina um segredo seguro 
+6. Escolha "Just the push event"
+7. Verifique que o webhook está "Active"
+8. Salve o webhook
 
-- **Mac**: `brew install ngrok`
-- **Linux**: `sudo apt install ngrok`  
-- **Windows**: `choco install ngrok`
-
-### Conectar à conta
-
-Conecte o agente à sua conta do Ngrok usando o token de autenticação:
-
-```bash
-ngrok config add-authtoken SEU_AUTH_TOKEN
-```
-
-Substitua `SEU_AUTH_TOKEN` pelo token disponível no [Dashboard do Ngrok](https://dashboard.ngrok.com/get-started/your-authtoken).
-
-### Iniciar um túnel temporário
-
-Para expor um serviço web local na porta 80:
-
-```bash
-ngrok http 80
-```
-
-O Ngrok vai gerar uma URL pública segura que encaminha o tráfego para `http://localhost:80`.
-
-### Iniciar um túnel permanente
-
-Para usar sempre a mesma URL ao reiniciar o túnel, use a flag `--url`: 
-
-```bash
-ngrok http 80 --url=seusubdominio.ngrok.io
-```
-
-Essa opção requer um [plano pago](https://ngrok.com/pricing) do Ngrok.
-
-### Adicionar segurança
-
-É possível adicionar segurança aos endpoints públicos do Ngrok sem modificar o serviço web local.
-
-Por exemplo, para exigir autenticação básica HTTP:
-
-```bash
-ngrok http -auth="usuario:senha" 80
-```
-
-Consulte a [documentação do Ngrok](https://ngrok.com/docs) para mais opções de segurança e configuração avançada.
+Isso possibilita atualizações automáticas do código quando um push é realizado para o repositório.
 
 ## Primeiro Acesso
 
@@ -225,7 +170,7 @@ Consulte a [documentação do Ngrok](https://ngrok.com/docs) para mais opções 
 
 ### 1. Erros de Conexão ao Banco de Dados (HTTP ERROR 500)
 
-Se encontrar o erro "Access denied for user 'root'@'localhost'":
+Se encontrar erros de conexão:
 
 1. Verifique se está usando o arquivo `db.php` centralizado:
    ```php
@@ -240,11 +185,6 @@ Se encontrar o erro "Access denied for user 'root'@'localhost'":
 3. Verifique se o link simbólico está correto:
    ```bash
    ls -la /var/www/html/soudigital/includes/db.php
-   ```
-   
-4. Execute o script para verificar conexões diretas:
-   ```bash
-   php check_db_connections.php
    ```
 
 ### 2. Páginas Sem Estilo CSS
@@ -267,6 +207,8 @@ Se encontrar o erro "Access denied for user 'root'@'localhost'":
    ```
    
 2. Certifique-se de que o PHP tem permissão para escrever nos diretórios
+   
+3. Para arquivos grandes, use o formulário alternativo em `page/formulario-alternativo.php`
 
 ## Atualizando o Sistema
 
@@ -275,10 +217,10 @@ Para atualizar o sistema e suas dependências:
 1. **Backup dos Dados**
    ```bash
    # Fazer backup do banco de dados
-   php backup_database.php
+   mysqldump -u seu_usuario -p sou_digital | gzip > backups/db/backup_$(date +%Y%m%d).sql.gz
    
-   # Fazer backup dos arquivos
-   php backup_files.php
+   # Fazer backup dos arquivos de upload
+   tar -czvf backups/files/uploads_$(date +%Y%m%d).tar.gz uploads/
    ```
 
 2. **Atualizar o Código**
@@ -294,10 +236,10 @@ Para atualizar o sistema e suas dependências:
 4. **Verificar Atualizações do Banco**
    ```bash
    # Se houver scripts de atualização
-   mysql -u seu_usuario -p nome_do_banco < db/updates/update_latest.sql
+   mysql -u seu_usuario -p sou_digital < db/updates/update_latest.sql
    ```
 
-## Estrutura de Diretórios
+## Estrutura de Diretórios Principal
 
 O sistema está organizado da seguinte forma:
 ```
@@ -318,9 +260,40 @@ O sistema está organizado da seguinte forma:
 
 - **db.php**: Arquivo central de conexão com o banco de dados
 - **index.php**: Página inicial do sistema
-- **header.php**, **sidebar.php**, **footer.php**: Componentes reutilizáveis da interface
-- **upload_functions.php**: Funções para manipulação de uploads
-- **check_db_connections.php**: Script para verificar conexões diretas ao banco
+- **login.php**: Página de autenticação
+- **includes/header.php**, **includes/sidebar.php**, **includes/footer.php**: Componentes da interface
+- **includes/upload_functions.php**: Funções para manipulação de uploads
+- **processar-upload.php** e **processar-upload-grande.php**: Processamento de uploads
+- **page/meus-reembolsos.php**: Gerenciamento de reembolsos
+- **page/gerar-script.php**: Criação de relatórios/chamados
+- **page/visualizar-relatorios.php**: Visualização de relatórios
+
+## Módulos Principais
+
+1. **Sistema de Autenticação**:
+   - Login/Logout
+   - Gerenciamento de Usuários
+   - Perfis e Fotos de Perfil
+   
+2. **Chamados e Relatórios**:
+   - Registro de Chamados
+   - Controle de Quilometragem
+   - Geração de Scripts de Atendimento
+   
+3. **Reembolsos**:
+   - Solicitação de Reembolsos
+   - Workflow de Aprovação
+   - Exportação de Relatórios
+   
+4. **Blog Corporativo**:
+   - Criação de Posts
+   - Aprovação de Conteúdo
+   - Comentários e Reações
+
+5. **Notificações**:
+   - Alertas em Tempo Real
+   - Centro de Notificações
+   - Histórico de Atividades
 
 ## Melhores Práticas
 
@@ -370,4 +343,4 @@ Para suporte técnico ou dúvidas sobre o sistema, entre em contato:
 
 ---
 
-**Atualizado em Fevereiro de 2025** 
+**Atualizado em Junho de 2023** 
