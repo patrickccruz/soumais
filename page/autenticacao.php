@@ -101,14 +101,7 @@
                 </div>
               </div>
 
-              <div class="credits">
-                <div class="copyright">
-                  &copy; Copyright <strong><span>Sou + Digital</span></strong>. Todos os direitos reservados
-                </div>
-                <div class="credits">
-                  Desenvolvido por <a href="https://www.linkedin.com/in/patrick-da-costa-cruz-08493212a/" target="_blank">Patrick C Cruz</a>
-                </div>
-              </div>
+              <?php include_once '../includes/footer.php'; ?>
 
             </div>
           </div>
